@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import type { Product } from "./products";
 
-export type CartItem = { product: Product; size?: number; quantity: number };
+export type CartItem = { product: Product; size: number | undefined; quantity: number };
 type CartContextValue = {
   items: CartItem[];
   isOpen: boolean;
