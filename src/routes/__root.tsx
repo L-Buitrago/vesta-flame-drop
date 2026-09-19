@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { CartProvider } from "../lib/cart-context";
+import { VestaShell } from "../components/vesta-shell";
+import logoAsset from "../assets/vesta-logo.png.asset.json";
 
 function NotFoundComponent() {
   return (
@@ -77,21 +80,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "VESTA Fine Jewelry" },
+      { name: "description", content: "Joias brasileiras em edições limitadas e numeradas." },
+      { name: "author", content: "VESTA Fine Jewelry" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -118,9 +121,6 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}><CartProvider><VestaShell /><Outlet /><footer id="rodape" className="footer"><div className="footer-brand"><img src={logoAsset.url} alt="Vesta Fine Jewelry"/><p>Joias para atravessar gerações.</p></div><div><h3>Ajuda</h3><a href="#acesso">Envios e trocas</a><a href="#acesso">Guia de medidas</a><a href="#acesso">Cuidados</a></div><div><h3>A Vesta</h3><a href="#historia">Nossa história</a><a href="#acesso">Atendimento</a><a href="#acesso">Instagram</a></div><div className="footer-contact"><h3>Contato</h3><p>contato@vestajewelry.com.br</p><p>Visa · Mastercard · Pix</p></div><p className="copyright">© 2026 Vesta Fine Jewelry</p></footer></CartProvider></QueryClientProvider>
   );
 }
