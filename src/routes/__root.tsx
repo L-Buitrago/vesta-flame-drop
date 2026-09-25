@@ -13,7 +13,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart-context";
 import { VestaShell } from "../components/vesta-shell";
-import logoAsset from "../assets/vesta-logo.png.asset.json";
 
 function NotFoundComponent() {
   return (
@@ -105,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
@@ -121,6 +120,6 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
-    <QueryClientProvider client={queryClient}><CartProvider><VestaShell /><Outlet /><footer id="rodape" className="footer"><div className="footer-brand"><img src={logoAsset.url} alt="Vesta Fine Jewelry"/><p>Joias para atravessar gerações.</p></div><div><h3>Ajuda</h3><a href="#acesso">Envios e trocas</a><a href="#acesso">Guia de medidas</a><a href="#acesso">Cuidados</a></div><div><h3>A Vesta</h3><a href="#historia">Nossa história</a><a href="#acesso">Atendimento</a><a href="#acesso">Instagram</a></div><div className="footer-contact"><h3>Contato</h3><p>contato@vestajewelry.com.br</p><p>Visa · Mastercard · Pix</p></div><p className="copyright">© 2026 Vesta Fine Jewelry</p></footer></CartProvider></QueryClientProvider>
+    <QueryClientProvider client={queryClient}><CartProvider><VestaShell /><Outlet /><footer id="rodape" className="footer"><div className="footer-brand"><div className="footer-logo"><span>VESTA</span><small>FINE JEWELRY</small></div><p>Joias para atravessar gerações.</p></div><div><h3>Ajuda</h3><a href="#acesso">Envios e trocas</a><a href="#acesso">Guia de medidas</a><a href="#acesso">Cuidados</a></div><div><h3>A Vesta</h3><a href="#historia">Nossa história</a><a href="#acesso">Atendimento</a><a href="#acesso">Instagram</a></div><div className="footer-contact"><h3>Contato</h3><p>contato@vestajewelry.com.br</p><p>Visa · Mastercard · Pix</p></div><p className="copyright">© 2026 Vesta Fine Jewelry</p></footer></CartProvider></QueryClientProvider>
   );
 }
