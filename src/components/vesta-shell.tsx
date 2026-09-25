@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
 import { formatPrice, products } from "@/lib/products";
-import logoAsset from "@/assets/vesta-logo.png.asset.json";
 
 const nav = ["DROP 01", "Anéis", "Brincos", "Colares", "Pulseiras", "A Vesta"];
 
@@ -25,7 +24,7 @@ export function VestaShell() {
           {nav.map((item) => <Link key={item} to="/" hash={item === "A Vesta" ? "historia" : item === "DROP 01" ? "drop-01" : "categorias"} className="nav-link">{item}</Link>)}
         </nav>
         <Button variant="ghost" size="icon" className="mobile-menu-button" aria-label="Abrir menu" onClick={() => setMenuOpen(true)}><Menu /></Button>
-        <Link to="/" className="brand" aria-label="Vesta Fine Jewelry"><img src={logoAsset.url} alt="Vesta Fine Jewelry" /></Link>
+        <Link to="/" className="brand" aria-label="Vesta Fine Jewelry"><span>VESTA</span><small>FINE JEWELRY</small></Link>
         <div className="header-actions">
           <Button variant="ghost" size="icon" aria-label="Buscar" onClick={() => setSearchOpen(true)}><Search /></Button>
           <Button variant="ghost" size="icon" aria-label="Minha conta" className="account-action"><UserRound /></Button>
@@ -33,7 +32,7 @@ export function VestaShell() {
         </div>
       </header>
 
-      {menuOpen && <div className="mobile-menu"><Button variant="ghost" size="icon" aria-label="Fechar menu" onClick={() => setMenuOpen(false)}><X /></Button><img src={logoAsset.url} alt="Vesta Fine Jewelry" />{nav.map((item) => <Link key={item} to="/" hash={item === "A Vesta" ? "historia" : item === "DROP 01" ? "drop-01" : "categorias"} onClick={() => setMenuOpen(false)}>{item}</Link>)}</div>}
+      {menuOpen && <div className="mobile-menu"><Button variant="ghost" size="icon" aria-label="Fechar menu" onClick={() => setMenuOpen(false)}><X /></Button><div className="mobile-brand"><span>VESTA</span><small>FINE JEWELRY</small></div>{nav.map((item) => <Link key={item} to="/" hash={item === "A Vesta" ? "historia" : item === "DROP 01" ? "drop-01" : "categorias"} onClick={() => setMenuOpen(false)}>{item}</Link>)}</div>}
 
       {searchOpen && <div className="search-overlay"><div className="search-inner"><Button variant="ghost" size="icon" aria-label="Fechar busca" onClick={() => setSearchOpen(false)}><X /></Button><label htmlFor="site-search">O que você procura?</label><input id="site-search" autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder="ANEL, COLAR, BRINCO..." />{filtered.map((product) => <Link key={product.id} to="/produto/$productId" params={{ productId: product.id }} onClick={() => setSearchOpen(false)} className="search-result"><span>{product.name}</span><span>{formatPrice(product.price)}</span></Link>)}</div></div>}
 
