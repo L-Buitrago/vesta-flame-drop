@@ -11,8 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { CartProvider } from "../lib/cart-context";
 import { VestaShell } from "../components/vesta-shell";
+import { Toaster } from "../components/ui/sonner";
+import { useCartSync } from "../hooks/use-cart-sync";
 
 function NotFoundComponent() {
   return (
