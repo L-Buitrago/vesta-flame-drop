@@ -119,8 +119,9 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useCartSync();
 
   return (
-    <QueryClientProvider client={queryClient}><CartProvider><VestaShell /><Outlet /><footer id="rodape" className="footer"><div className="footer-brand"><div className="footer-logo"><span>VESTA</span><small>FINE JEWELRY</small></div><p>Joias para atravessar gerações.</p></div><div><h3>Ajuda</h3><a href="#acesso">Envios e trocas</a><a href="#acesso">Guia de medidas</a><a href="#acesso">Cuidados</a></div><div><h3>A Vesta</h3><a href="#historia">Nossa história</a><a href="#acesso">Atendimento</a><a href="#acesso">Instagram</a></div><div className="footer-contact"><h3>Contato</h3><p>contato@vestajewelry.com.br</p><p>Visa · Mastercard · Pix</p></div><p className="copyright">© 2026 Vesta Fine Jewelry</p></footer></CartProvider></QueryClientProvider>
+    <QueryClientProvider client={queryClient}><VestaShell /><Outlet /><footer id="rodape" className="footer"><div className="footer-brand"><div className="footer-logo"><span>VESTA</span><small>FINE JEWELRY</small></div><p>Joias para atravessar gerações.</p></div><div><h3>Ajuda</h3><a href="#acesso">Envios e trocas</a><a href="#acesso">Guia de medidas</a><a href="#acesso">Cuidados</a></div><div><h3>A Vesta</h3><a href="#historia">Nossa história</a><a href="#acesso">Atendimento</a><a href="#acesso">Instagram</a></div><div className="footer-contact"><h3>Contato</h3><p>contato@vestajewelry.com.br</p><p>Visa · Mastercard · Pix</p></div><p className="copyright">© 2026 Vesta Fine Jewelry</p></footer><Toaster /></QueryClientProvider>
   );
 }
