@@ -63,30 +63,42 @@ export const useCartStore = create<CartStore>()(
                 items: [{ ...item, lineId: result.lineId }],
                 isOpen: true,
               });
+            } else {
+              set({
+                items: [{ ...item, lineId: `local-${item.variantId}` }],
+                isOpen: true,
+              });
             }
           } else if (existingItem) {
             const newQuantity = existingItem.quantity + item.quantity;
-            if (!existingItem.lineId) {
-              console.error("Cannot update quantity for item without lineId:", existingItem);
-              return;
-            }
-            const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
-            if (result.success) {
+            if (existingItem.lineId?.startsWith("local-") || !cartId) {
               const currentItems = get().items;
               set({
                 items: currentItems.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i)),
                 isOpen: true,
               });
-            } else if (result.cartNotFound) {
-              clearCart();
+            } else {
+              const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
+              if (result.success) {
+                const currentItems = get().items;
+                set({
+                  items: currentItems.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i)),
+                  isOpen: true,
+                });
+              } else if (result.cartNotFound) {
+                clearCart();
+              }
             }
           } else {
-            const result = await addLineToShopifyCart(cartId, { variantId: item.variantId, quantity: item.quantity });
-            if (result.success) {
+            const result = cartId ? await addLineToShopifyCart(cartId, { variantId: item.variantId, quantity: item.quantity }) : null;
+            if (result?.success) {
               const currentItems = get().items;
               set({ items: [...currentItems, { ...item, lineId: result.lineId ?? null }], isOpen: true });
-            } else if (result.cartNotFound) {
+            } else if (result?.cartNotFound) {
               clearCart();
+            } else {
+              const currentItems = get().items;
+              set({ items: [...currentItems, { ...item, lineId: `local-${item.variantId}` }], isOpen: true });
             }
           }
         } catch (error) {
@@ -104,7 +116,13 @@ export const useCartStore = create<CartStore>()(
 
         const { items, cartId, clearCart } = get();
         const item = items.find((i) => i.variantId === variantId);
-        if (!item?.lineId || !cartId) return;
+        if (!item) return;
+
+        if (!cartId || item.lineId?.startsWith("local-")) {
+          const currentItems = get().items;
+          set({ items: currentItems.map((i) => (i.variantId === variantId ? { ...i, quantity } : i)) });
+          return;
+        }
 
         set({ isLoading: true });
         try {
@@ -125,7 +143,14 @@ export const useCartStore = create<CartStore>()(
       removeItem: async (variantId) => {
         const { items, cartId, clearCart } = get();
         const item = items.find((i) => i.variantId === variantId);
-        if (!item?.lineId || !cartId) return;
+        if (!item) return;
+
+        if (!cartId || item.lineId?.startsWith("local-")) {
+          const currentItems = get().items;
+          const newItems = currentItems.filter((i) => i.variantId !== variantId);
+          newItems.length === 0 ? clearCart() : set({ items: newItems });
+          return;
+        }
 
         set({ isLoading: true });
         try {
