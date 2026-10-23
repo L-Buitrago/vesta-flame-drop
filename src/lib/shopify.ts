@@ -15,6 +15,8 @@ export interface ShopifyProduct {
     title: string;
     description: string;
     handle: string;
+    productType?: string;
+    tags?: string[];
     priceRange: {
       minVariantPrice: { amount: string; currencyCode: string };
     };
@@ -34,6 +36,29 @@ export interface ShopifyProduct {
     };
     options: Array<{ name: string; values: string[] }>;
   };
+}
+
+export type ProductCategory = "todos" | "colares" | "pulseiras" | "brincos" | "aneis";
+
+export function getProductCategory(product: ShopifyProduct): "colares" | "pulseiras" | "brincos" | "aneis" | "outros" {
+  const title = (product.node.title || "").toLowerCase();
+  const type = (product.node.productType || "").toLowerCase();
+  const tags = (product.node.tags || []).map((t) => t.toLowerCase()).join(" ");
+  const text = `${title} ${type} ${tags}`;
+
+  if (text.includes("ring") || text.includes("anel") || text.includes("anéis") || text.includes("aliança")) {
+    return "aneis";
+  }
+  if (text.includes("earring") || text.includes("brinco") || text.includes("argola") || text.includes("pendientes") || text.includes("hoop")) {
+    return "brincos";
+  }
+  if (text.includes("bracelet") || text.includes("pulseira") || text.includes("bangle") || text.includes("bracelete") || text.includes("cuff")) {
+    return "pulseiras";
+  }
+  if (text.includes("necklace") || text.includes("colar") || text.includes("pendant") || text.includes("choker") || text.includes("gargantilha") || text.includes("corrente")) {
+    return "colares";
+  }
+  return "outros";
 }
 
 export async function storefrontApiRequest(query: string, variables: Record<string, unknown> = {}) {
@@ -82,6 +107,8 @@ export const STOREFRONT_QUERY = `
           title
           description
           handle
+          productType
+          tags
           priceRange {
             minVariantPrice {
               amount
@@ -130,6 +157,8 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       title
       description
       handle
+      productType
+      tags
       priceRange {
         minVariantPrice {
           amount
@@ -391,7 +420,7 @@ export const FALLBACK_PRODUCTS: ShopifyProduct[] = [
   },
 ];
 
-export async function fetchShopifyProducts(first = 20, query?: string): Promise<ShopifyProduct[]> {
+export async function fetchShopifyProducts(first = 50, query?: string): Promise<ShopifyProduct[]> {
   const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
   const edges = (data?.data?.products?.edges ?? []) as ShopifyProduct[];
   if (edges.length > 0) {
@@ -569,4 +598,32 @@ export async function removeLineFromShopifyCart(
     return { success: false };
   }
   return { success: true };
+}
+
+export function getShopifyCartPermalink(items: Array<{ variantId: string; quantity: number }>): string {
+  const cleanItems = items.filter((i) => i.variantId && !i.variantId.includes("anel-chama") && !i.variantId.includes("default"));
+  if (cleanItems.length === 0) return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/cart`;
+  const lines = cleanItems.map((i) => `${i.variantId.split("/").pop()}:${i.quantity}`).join(",");
+  return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/cart/${lines}?channel=online_store`;
+}
+
+export async function createShopifyCartFromLines(
+  items: Array<{ variantId: string; quantity: number }>,
+): Promise<{ cartId: string; checkoutUrl: string; lineMap: Record<string, string> } | null> {
+  const lines = items.map((i) => ({ quantity: i.quantity, merchandiseId: i.variantId }));
+  const data = await storefrontApiRequest(CART_CREATE_MUTATION, { input: { lines } });
+  const cart = data?.data?.cartCreate?.cart;
+  if (!cart?.checkoutUrl) return null;
+  const lineMap: Record<string, string> = {};
+  const lineEdges = cart.lines?.edges ?? [];
+  lineEdges.forEach((e: { node: { id: string; merchandise: { id: string } } }) => {
+    if (e.node?.merchandise?.id) {
+      lineMap[e.node.merchandise.id] = e.node.id;
+    }
+  });
+  return {
+    cartId: cart.id,
+    checkoutUrl: formatCheckoutUrl(cart.checkoutUrl),
+    lineMap,
+  };
 }

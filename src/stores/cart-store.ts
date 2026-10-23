@@ -4,6 +4,8 @@ import {
   addLineToShopifyCart,
   CART_QUERY,
   createShopifyCart,
+  createShopifyCartFromLines,
+  getShopifyCartPermalink,
   removeLineFromShopifyCart,
   storefrontApiRequest,
   updateShopifyCartLine,
@@ -64,45 +66,75 @@ export const useCartStore = create<CartStore>()(
                 isOpen: true,
               });
             } else {
+              const fallbackItems = [{ ...item, lineId: `local-${item.variantId}` }];
               set({
-                items: [{ ...item, lineId: `local-${item.variantId}` }],
+                cartId: null,
+                checkoutUrl: getShopifyCartPermalink(fallbackItems),
+                items: fallbackItems,
                 isOpen: true,
               });
             }
           } else if (existingItem) {
             const newQuantity = existingItem.quantity + item.quantity;
-            if (existingItem.lineId?.startsWith("local-") || !cartId) {
+            const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
+            if (result.success) {
               const currentItems = get().items;
               set({
                 items: currentItems.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i)),
                 isOpen: true,
               });
             } else {
-              const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
-              if (result.success) {
-                const currentItems = get().items;
+              // Re-create cart with fresh lines
+              const updatedItems = get().items.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i));
+              const fresh = await createShopifyCartFromLines(updatedItems);
+              if (fresh) {
                 set({
-                  items: currentItems.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i)),
+                  cartId: fresh.cartId,
+                  checkoutUrl: fresh.checkoutUrl,
+                  items: updatedItems.map((i) => ({ ...i, lineId: fresh.lineMap[i.variantId] ?? i.lineId })),
                   isOpen: true,
                 });
-              } else if (result.cartNotFound) {
-                clearCart();
+              } else {
+                set({
+                  items: updatedItems,
+                  checkoutUrl: getShopifyCartPermalink(updatedItems),
+                  isOpen: true,
+                });
               }
             }
           } else {
-            const result = cartId ? await addLineToShopifyCart(cartId, { variantId: item.variantId, quantity: item.quantity }) : null;
+            const result = await addLineToShopifyCart(cartId, { variantId: item.variantId, quantity: item.quantity });
             if (result?.success) {
               const currentItems = get().items;
               set({ items: [...currentItems, { ...item, lineId: result.lineId ?? null }], isOpen: true });
-            } else if (result?.cartNotFound) {
-              clearCart();
             } else {
-              const currentItems = get().items;
-              set({ items: [...currentItems, { ...item, lineId: `local-${item.variantId}` }], isOpen: true });
+              // Re-create cart with all lines
+              const allItems = [...get().items, item];
+              const fresh = await createShopifyCartFromLines(allItems);
+              if (fresh) {
+                set({
+                  cartId: fresh.cartId,
+                  checkoutUrl: fresh.checkoutUrl,
+                  items: allItems.map((i) => ({ ...i, lineId: fresh.lineMap[i.variantId] ?? i.lineId })),
+                  isOpen: true,
+                });
+              } else {
+                set({
+                  items: [...get().items, { ...item, lineId: `local-${item.variantId}` }],
+                  checkoutUrl: getShopifyCartPermalink(allItems),
+                  isOpen: true,
+                });
+              }
             }
           }
         } catch (error) {
           console.error("Failed to add item:", error);
+          const allItems = [...get().items, item];
+          set({
+            items: allItems.map((i) => ({ ...i, lineId: i.lineId ?? `local-${i.variantId}` })),
+            checkoutUrl: getShopifyCartPermalink(allItems),
+            isOpen: true,
+          });
         } finally {
           set({ isLoading: false });
         }

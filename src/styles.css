@@ -180,6 +180,28 @@ a { color: inherit; text-decoration: none; }
 .vesta-button:hover { background:transparent; color:var(--foreground); transform:translateY(-2px); }
 .hero .vesta-button { border-color:var(--background); background:color-mix(in oklab,var(--background) 8%,transparent); color:var(--background); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
 .hero .vesta-button:hover { background:var(--background); color:var(--foreground); transform:translateY(-2px); }
+.trust-strip { background:var(--secondary); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:28px 4vw; }
+.trust-strip-inner { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; max-width:1400px; margin:0 auto; }
+.trust-badge { display:flex; align-items:flex-start; gap:12px; }
+.trust-icon { font-size:14px; color:var(--accent); line-height:1.4; }
+.trust-badge strong { display:block; font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:500; margin-bottom:4px; }
+.trust-badge p { margin:0; font-size:11px; color:var(--muted-foreground); line-height:1.4; }
+
+.category-filter-bar { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:34px; justify-content:center; }
+.filter-pill {
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--foreground);
+  padding:9px 20px;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+.filter-pill:hover { border-color:var(--foreground); }
+.filter-pill.active { background:var(--foreground); color:var(--background); border-color:var(--foreground); font-weight:500; }
+
 .line-link { position:relative; display:inline-block; padding-bottom:5px; font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
 .line-link:after { content:""; position:absolute; left:0; bottom:0; width:100%; height:1px; background:currentColor; transform-origin:left; transition:transform .5s cubic-bezier(.16,1,.3,1); }
 .line-link:hover:after { transform:scaleX(.25); }
@@ -194,6 +216,21 @@ a { color: inherit; text-decoration: none; }
 .product-image { position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--secondary); }
 .product-image img { width:100%; height:100%; object-fit:cover; transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity .6s ease; }
 .product-image img.secondary { position:absolute; inset:0; opacity:0; }
+.product-badge {
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:color-mix(in oklab,var(--background) 92%,transparent);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  padding:4px 9px;
+  font-size:8px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  font-weight:500;
+  z-index:2;
+  border:1px solid var(--border);
+}
 .product-card:hover .product-image img.secondary { opacity:1; }
 .product-card:hover img { transform:scale(1.04); }
 .product-card.sold-out img { filter:saturate(.2); opacity:.65; }
@@ -213,7 +250,12 @@ a { color: inherit; text-decoration: none; }
 }
 .product-meta p,.product-meta>span { margin:5px 0; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
 .product-meta p { font-weight:500; }
+.product-meta .installments { font-size:9px; color:var(--muted-foreground); letter-spacing:.08em; text-transform:uppercase; font-weight:400; margin:2px 0 0; }
 .product-meta>span { color:var(--muted-foreground); }
+.cart-trust-badges { margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:8px; }
+.trust-item { display:flex; align-items:center; gap:8px; font-size:10px; color:var(--muted-foreground); letter-spacing:.04em; }
+.trust-item svg { flex-shrink:0; }
+.trust-item strong { color:var(--foreground); font-weight:500; }
 .stock-line { width:100%; height:2px; margin-top:12px; background:color-mix(in oklab,var(--border) 60%,transparent); position:relative; overflow:hidden; }
 .stock-line i { display:block; height:100%; background:var(--accent); transition:width 1s cubic-bezier(.16,1,.3,1); }
 .center-link { text-align:center; padding-top:62px; }
