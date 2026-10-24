@@ -35,14 +35,40 @@ export const Route = createFileRoute("/produto/$productId")({
   component: ProductPage,
 });
 
-function formatProductDescription(description?: string) {
-  if (!description || description.trim() === "") {
-    return "Joia fina com acabamento refinado e cravação de alta precisão. Uma peça versátil e atemporal criada para elevar qualquer composição com brilho e sofisticação.";
+function formatProductDescription(description?: string, title?: string) {
+  const isGenericOrRaw =
+    !description ||
+    description.trim() === "" ||
+    description.includes("SPECIFICATIONS") ||
+    description.includes("High-concerned chemical") ||
+    description.includes("Pulseira com cravação");
+
+  if (!isGenericOrRaw) {
+    return description;
   }
-  if (description.includes("SPECIFICATIONS") || description.includes("High-concerned chemical")) {
-    return "Pulseira com cravação de alta precisão e banho especial. Design atemporal e elegante que reflete a luz com intensidade em todos os ângulos.";
+
+  const lowerTitle = (title ?? "").toLowerCase();
+
+  if (
+    lowerTitle.includes("colar") ||
+    lowerTitle.includes("necklace") ||
+    lowerTitle.includes("pendant") ||
+    lowerTitle.includes("pingente") ||
+    lowerTitle.includes("chain")
+  ) {
+    return "Colar refinado com pingente exclusivo e banho especial de alta durabilidade. Uma joia atemporal em aço inoxidável cirúrgico, totalmente à prova d'água e ao suor, criada para elevar qualquer visual com elegância.";
   }
-  return description;
+  if (lowerTitle.includes("brinco") || lowerTitle.includes("earring")) {
+    return "Brinco com design sofisticado e acabamento polido. Peça hipoalergênica, leve e resistente à água, perfeita para iluminar o rosto com elegância em qualquer ocasião.";
+  }
+  if (lowerTitle.includes("anel") || lowerTitle.includes("ring")) {
+    return "Anel com acabamento primoroso e encaixe confortável. Resistente à água e ao suor, combinando estética contemporânea e alta durabilidade para uso contínuo.";
+  }
+  if (lowerTitle.includes("pulseira") || lowerTitle.includes("bracelet") || lowerTitle.includes("bracelete")) {
+    return "Pulseira com elos refinados e cravação especial. Design atemporal e elegante que reflete a luz com intensidade em todos os ângulos, resistente à água e ao suor.";
+  }
+
+  return "Joia fina contemporânea com acabamento premium e banho especial. Peça hipoalergênica, totalmente resistente à água e ao suor, criada para atravessar o tempo com sofisticação.";
 }
 
 function ProductPage() {
@@ -58,12 +84,12 @@ function ProductPage() {
 
   if (!product) return null;
 
-  const displayDescription = formatProductDescription(product.description);
+  const displayDescription = formatProductDescription(product.description, product.title);
   const details = [
     ["Descrição", `${displayDescription} Peça de alto padrão com acabamento polido.`],
-    ["Materiais e cuidados", "Limpe delicadamente com uma flanela seca. Evite contato com perfumes, cremes e água do mar."],
-    ["Envio e trocas", "Envio segurado com rastreio para todo o Brasil. Trocas em até 7 dias após o recebimento."],
-    ["Embalagem presente", "Todas as joias chegam em nossa embalagem especial, pronta para presentear."],
+    ["Materiais e cuidados", "Aço inoxidável com banho nobre de alta durabilidade. À prova d'água e de suor. Limpe delicadamente com uma flanela seca para preservar o brilho."],
+    ["Envio e trocas", "Envio segurado com código de rastreamento para todo o Brasil. Garantia de troca em até 7 dias após o recebimento."],
+    ["Embalagem presente", "Todas as joias são entregues em embalagem especial Vesta, pronta para presentear com sofisticação."],
   ];
 
   const handleAdd = async () => {
@@ -80,6 +106,11 @@ function ProductPage() {
 
   const recs = catalog.filter((item) => item.node.id !== product.id).slice(0, 4);
 
+  // Filtra fotos genéricas de lote de fornecedor (banner repetido de 3 colares)
+  const galleryImages = product.images.edges
+    .map((e) => e.node)
+    .filter((img) => !img.url.includes("S86269fcc87bd4a7da443c69a4d1d6e97y"));
+
   return (
     <main className="pdp">
       <div className="breadcrumbs">
@@ -88,8 +119,8 @@ function ProductPage() {
         <span>{product.title}</span>
       </div>
       <section className="pdp-layout">
-        <div className="pdp-gallery">
-          {product.images.edges.map(({ node }) => (
+        <div className={`pdp-gallery ${galleryImages.length <= 1 ? "single-image" : ""}`}>
+          {galleryImages.map((node) => (
             <img key={node.url} src={node.url} alt={node.altText ?? product.title} width={1024} height={1280} loading="lazy" />
           ))}
         </div>

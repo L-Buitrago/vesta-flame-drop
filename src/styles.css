@@ -338,7 +338,8 @@ a { color: inherit; text-decoration: none; }
 .breadcrumbs { padding:25px 0; display:flex; gap:8px; font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted-foreground); }
 .pdp-layout { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(360px,.7fr); gap:6vw; align-items:start; }
 .pdp-gallery { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-.pdp-gallery img { width:100%; aspect-ratio:4/5; object-fit:cover; background:var(--secondary); }
+.pdp-gallery.single-image { grid-template-columns:1fr; max-width:580px; }
+.pdp-gallery img { width:100%; aspect-ratio:4/5; object-fit:cover; background:var(--secondary); border-radius:2px; }
 .pdp-info { position:sticky; top:95px; padding:2vh 0 4vh; }
 .pdp-info h1 {
   font:600 clamp(24px,2.5vw,36px)/1.2 var(--font-serif);
