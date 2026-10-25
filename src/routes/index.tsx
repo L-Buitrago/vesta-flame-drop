@@ -15,8 +15,8 @@ const productsQuery = queryOptions({
 });
 
 export const Route = createFileRoute("/")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    categoria: typeof search.categoria === "string" ? search.categoria : "todos",
+  validateSearch: (search: Record<string, unknown>): { categoria?: string | undefined } => ({
+    categoria: typeof search["categoria"] === "string" ? (search["categoria"] as string) : undefined,
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQuery),
   head: () => ({
@@ -104,9 +104,6 @@ function Index() {
             ))}
           </div>
           <div className="hero-actions">
-            <a href="#drop-01" className="vesta-button">
-              Ver coleção completa
-            </a>
             <a href="#acesso" className="line-link light">
               Lista VIP
             </a>

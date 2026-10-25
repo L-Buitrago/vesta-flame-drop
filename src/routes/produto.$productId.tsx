@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { fetchProductByHandle, fetchShopifyProducts, formatPrice } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cart-store";
+import { toast } from "sonner";
 
 const productQuery = (handle: string) =>
   queryOptions({
@@ -102,6 +103,7 @@ function ProductPage() {
       quantity: 1,
       selectedOptions: selectedVariant.selectedOptions ?? [],
     });
+    toast.success(`${product.title} adicionado à sacola!`);
   };
 
   const recs = catalog.filter((item) => item.node.id !== product.id).slice(0, 4);

@@ -236,6 +236,38 @@ a { color: inherit; text-decoration: none; }
 .product-card.sold-out img { filter:saturate(.2); opacity:.65; }
 .product-card { transition:transform .5s cubic-bezier(.16,1,.3,1); }
 .product-card:hover { transform:translateY(-3px); }
+.quick-add-btn {
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:44px;
+  background:color-mix(in oklab,var(--foreground) 94%,transparent);
+  color:var(--background);
+  border:none;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(100%);
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  z-index:5;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.product-card:hover .quick-add-btn,
+.product-card:focus-within .quick-add-btn {
+  opacity:1;
+  transform:translateY(0);
+}
+.quick-add-btn:hover { background:var(--foreground); }
+.quick-add-btn.added { background:#15803d; color:#fff; opacity:1; transform:translateY(0); }
 .product-meta { padding-top:17px; }
 .product-meta>div:first-child { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
 .product-meta h3 {
@@ -416,6 +448,13 @@ a { color: inherit; text-decoration: none; }
   .product-grid { grid-template-columns:repeat(2,1fr); gap:28px 8px; }
   .product-meta>div:first-child { display:block; }
   .product-meta h3 { font-size:20px; }
+  .quick-add-btn {
+    opacity:1;
+    transform:translateY(0);
+    height:36px;
+    font-size:10px;
+    letter-spacing:.08em;
+  }
   .story { grid-template-columns:1fr; }
   .story-image { height:125vw; }
   .story-copy { padding:75px 24px 85px; }

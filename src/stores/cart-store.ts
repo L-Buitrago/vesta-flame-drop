@@ -51,90 +51,74 @@ export const useCartStore = create<CartStore>()(
       setOpen: (open) => set({ isOpen: open }),
 
       addItem: async (item) => {
-        const { items, cartId, clearCart } = get();
+        const { items, cartId } = get();
         const existingItem = items.find((i) => i.variantId === item.variantId);
 
-        set({ isLoading: true });
+        // Atualização otimista imediata para feedback instantâneo ao usuário
+        const optimisticItems = existingItem
+          ? items.map((i) => (i.variantId === item.variantId ? { ...i, quantity: i.quantity + item.quantity } : i))
+          : [...items, { ...item, lineId: `local-${item.variantId}` }];
+
+        set({
+          items: optimisticItems,
+          isOpen: true,
+          checkoutUrl: getShopifyCartPermalink(optimisticItems),
+          isLoading: true,
+        });
+
         try {
           if (!cartId) {
             const result = await createShopifyCart({ variantId: item.variantId, quantity: item.quantity });
             if (result) {
-              set({
+              set((state) => ({
                 cartId: result.cartId,
                 checkoutUrl: result.checkoutUrl,
-                items: [{ ...item, lineId: result.lineId }],
-                isOpen: true,
-              });
-            } else {
-              const fallbackItems = [{ ...item, lineId: `local-${item.variantId}` }];
-              set({
-                cartId: null,
-                checkoutUrl: getShopifyCartPermalink(fallbackItems),
-                items: fallbackItems,
-                isOpen: true,
-              });
+                items: state.items.map((i) =>
+                  i.variantId === item.variantId ? { ...i, lineId: result.lineId } : i,
+                ),
+              }));
             }
           } else if (existingItem) {
             const newQuantity = existingItem.quantity + item.quantity;
-            const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
-            if (result.success) {
+            let success = false;
+            if (existingItem.lineId && !existingItem.lineId.startsWith("local-")) {
+              const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
+              success = result.success;
+            }
+            if (!success) {
+              // Tenta recriar o carrinho com as linhas atuais
               const currentItems = get().items;
-              set({
-                items: currentItems.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i)),
-                isOpen: true,
-              });
-            } else {
-              // Re-create cart with fresh lines
-              const updatedItems = get().items.map((i) => (i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i));
-              const fresh = await createShopifyCartFromLines(updatedItems);
+              const fresh = await createShopifyCartFromLines(currentItems);
               if (fresh) {
                 set({
                   cartId: fresh.cartId,
                   checkoutUrl: fresh.checkoutUrl,
-                  items: updatedItems.map((i) => ({ ...i, lineId: fresh.lineMap[i.variantId] ?? i.lineId })),
-                  isOpen: true,
-                });
-              } else {
-                set({
-                  items: updatedItems,
-                  checkoutUrl: getShopifyCartPermalink(updatedItems),
-                  isOpen: true,
+                  items: currentItems.map((i) => ({ ...i, lineId: fresh.lineMap[i.variantId] ?? i.lineId })),
                 });
               }
             }
           } else {
             const result = await addLineToShopifyCart(cartId, { variantId: item.variantId, quantity: item.quantity });
-            if (result?.success) {
-              const currentItems = get().items;
-              set({ items: [...currentItems, { ...item, lineId: result.lineId ?? null }], isOpen: true });
+            if (result?.success && result.lineId) {
+              set((state) => ({
+                items: state.items.map((i) =>
+                  i.variantId === item.variantId ? { ...i, lineId: result.lineId! } : i,
+                ),
+              }));
             } else {
-              // Re-create cart with all lines
-              const allItems = [...get().items, item];
-              const fresh = await createShopifyCartFromLines(allItems);
+              const currentItems = get().items;
+              const fresh = await createShopifyCartFromLines(currentItems);
               if (fresh) {
                 set({
                   cartId: fresh.cartId,
                   checkoutUrl: fresh.checkoutUrl,
-                  items: allItems.map((i) => ({ ...i, lineId: fresh.lineMap[i.variantId] ?? i.lineId })),
-                  isOpen: true,
-                });
-              } else {
-                set({
-                  items: [...get().items, { ...item, lineId: `local-${item.variantId}` }],
-                  checkoutUrl: getShopifyCartPermalink(allItems),
-                  isOpen: true,
+                  items: currentItems.map((i) => ({ ...i, lineId: fresh.lineMap[i.variantId] ?? i.lineId })),
                 });
               }
             }
           }
         } catch (error) {
-          console.error("Failed to add item:", error);
-          const allItems = [...get().items, item];
-          set({
-            items: allItems.map((i) => ({ ...i, lineId: i.lineId ?? `local-${i.variantId}` })),
-            checkoutUrl: getShopifyCartPermalink(allItems),
-            isOpen: true,
-          });
+          console.warn("Shopify cart sync deferred to local fallback:", error);
         } finally {
           set({ isLoading: false });
         }
@@ -150,7 +134,7 @@ export const useCartStore = create<CartStore>()(
         const item = items.find((i) => i.variantId === variantId);
         if (!item) return;
 
-        if (!cartId || item.lineId?.startsWith("local-")) {
+        if (!cartId || !item.lineId || item.lineId.startsWith("local-")) {
           const currentItems = get().items;
           set({ items: currentItems.map((i) => (i.variantId === variantId ? { ...i, quantity } : i)) });
           return;
@@ -177,7 +161,7 @@ export const useCartStore = create<CartStore>()(
         const item = items.find((i) => i.variantId === variantId);
         if (!item) return;
 
-        if (!cartId || item.lineId?.startsWith("local-")) {
+        if (!cartId || !item.lineId || item.lineId.startsWith("local-")) {
           const currentItems = get().items;
           const newItems = currentItems.filter((i) => i.variantId !== variantId);
           newItems.length === 0 ? clearCart() : set({ items: newItems });
@@ -205,7 +189,7 @@ export const useCartStore = create<CartStore>()(
       getCheckoutUrl: () => get().checkoutUrl,
 
       syncCart: async () => {
-        const { cartId, isSyncing, clearCart } = get();
+        const { cartId, isSyncing } = get();
         if (!cartId || isSyncing) return;
 
         set({ isSyncing: true });
@@ -213,9 +197,12 @@ export const useCartStore = create<CartStore>()(
           const data = await storefrontApiRequest(CART_QUERY, { id: cartId });
           if (!data) return;
           const cart = data?.data?.cart;
-          if (!cart || cart.totalQuantity === 0) clearCart();
+          // Se o carrinho na Shopify foi finalizado ou expirou, reseta o cartId mas preserva os itens locais
+          if (!cart) {
+            set({ cartId: null, checkoutUrl: getShopifyCartPermalink(get().items) });
+          }
         } catch (error) {
-          console.error("Failed to sync cart with Shopify:", error);
+          console.warn("Cart sync notice:", error);
         } finally {
           set({ isSyncing: false });
         }

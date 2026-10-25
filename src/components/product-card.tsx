@@ -1,5 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { formatPrice, type ShopifyProduct } from "@/lib/shopify";
+import { useCartStore } from "@/stores/cart-store";
+import { toast } from "sonner";
+import { ShoppingBag, Loader2, Check } from "lucide-react";
+import { useState } from "react";
 
 // Identificadores de fotos genéricas compartilhadas de fornecedores do AliExpress (como o banner de 3 colares juntos)
 const GENERIC_SUPPLIER_PATTERNS = [
@@ -13,8 +17,11 @@ function isGenericSupplierPhoto(url?: string): boolean {
 
 export function ProductCard({ product }: { product: ShopifyProduct }) {
   const { node } = product;
+  const { addItem, isLoading: isCartLoading } = useCartStore();
+  const [isAdding, setIsAdding] = useState(false);
+
   const image = node.images.edges[0]?.node;
-  
+
   // Encontra uma segunda foto válida que não seja a foto genérica repetida e nem igual à primeira
   const validSecondaryNode = node.images.edges
     .slice(1)
@@ -24,6 +31,40 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
   const available = node.variants.edges.some((v) => v.node.availableForSale);
   const amount = parseFloat(node.priceRange.minVariantPrice.amount);
   const installment = (amount / 3).toFixed(2);
+  const currency = node.priceRange.minVariantPrice.currencyCode || "BRL";
+
+  const handleQuickAdd = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!available || isAdding) return;
+
+    setIsAdding(true);
+    const selectedVariant =
+      node.variants.edges.find((v) => v.node.availableForSale)?.node ?? node.variants.edges[0]?.node;
+
+    if (!selectedVariant) {
+      setIsAdding(false);
+      return;
+    }
+
+    try {
+      await addItem({
+        product,
+        variantId: selectedVariant.id,
+        variantTitle: selectedVariant.title,
+        price: selectedVariant.price,
+        quantity: 1,
+        selectedOptions: selectedVariant.selectedOptions ?? [],
+      });
+      toast.success(`${node.title} adicionado à sacola!`);
+    } catch (err) {
+      console.error("Erro ao adicionar produto:", err);
+      toast.error("Não foi possível adicionar à sacola no momento.");
+    } finally {
+      setTimeout(() => setIsAdding(false), 800);
+    }
+  };
 
   return (
     <article className={`product-card ${available ? "" : "sold-out"}`}>
@@ -41,13 +82,41 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
               height={1280}
             />
           )}
+
+          {available && (
+            <button
+              type="button"
+              className={`quick-add-btn ${isAdding ? "added" : ""}`}
+              onClick={handleQuickAdd}
+              aria-label={`Adicionar ${node.title} à sacola`}
+              disabled={isAdding || isCartLoading}
+            >
+              {isAdding ? (
+                <>
+                  <Check size={14} />
+                  <span>Adicionado</span>
+                </>
+              ) : isCartLoading ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  <span>Adicionando...</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingBag size={14} />
+                  <span>Adicionar à sacola</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
+
         <div className="product-meta">
           <div>
             <h3>{node.title}</h3>
             <div>
-              <p>{formatPrice(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode)}</p>
-              <span className="installments">ou 3x de {formatPrice(installment, node.priceRange.minVariantPrice.currencyCode)}</span>
+              <p>{formatPrice(node.priceRange.minVariantPrice.amount, currency)}</p>
+              <span className="installments">ou 3x de {formatPrice(installment, currency)}</span>
             </div>
           </div>
           <span>{available ? "Disponível" : "Esgotado"}</span>
@@ -57,4 +126,3 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     </article>
   );
 }
-

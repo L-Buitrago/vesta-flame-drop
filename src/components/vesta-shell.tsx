@@ -62,7 +62,7 @@ export function VestaShell() {
             <Link
               key={item.label}
               to="/"
-              search={item.cat ? { categoria: item.cat } : undefined}
+              search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
               hash={item.hash}
               className="nav-link"
             >
@@ -104,7 +104,7 @@ export function VestaShell() {
             <Link
               key={item.label}
               to="/"
-              search={item.cat ? { categoria: item.cat } : undefined}
+              search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
               hash={item.hash}
               onClick={() => setMenuOpen(false)}
             >
