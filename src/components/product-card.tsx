@@ -77,7 +77,8 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
               className="secondary"
               src={validSecondaryNode.url}
               alt={validSecondaryNode.altText ?? node.title}
-              loading="lazy"
+              loading="eager"
+              decoding="async"
               width={1024}
               height={1280}
             />
