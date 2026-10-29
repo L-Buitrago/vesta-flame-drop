@@ -186,7 +186,7 @@ function Index() {
 
       <section id="historia" className="story reveal">
         <div className="story-image">
-          <img src={collectionImage} alt="Coleção Chama Viva em ouro 18k" loading="lazy" width={1280} height={1600} />
+          <img src={collectionImage} alt="Coleção Vesta em ouro 18k" loading="lazy" width={819} height={1024} />
         </div>
         <div className="story-copy">
           <p className="eyebrow">A NOSSA ORIGEM</p>
