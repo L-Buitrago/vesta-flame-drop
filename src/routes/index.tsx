@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/product-card";
 import { fetchShopifyProducts, getProductCategory } from "@/lib/shopify";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
-import heroJewels from "@/assets/vesta-hero-jewels.png";
+import heroCoconut from "@/assets/vesta-hero-coconut.jpg";
 import collectionImage from "@/assets/vesta-collection.jpg";
 
 const productsQuery = queryOptions({
@@ -85,7 +85,7 @@ function Index() {
         <div className="hero-carousel">
           {[
             { src: heroPearls.url, alt: "Colares de ouro e pulseira de pérolas Vesta sobre a grade à beira-mar ao entardecer", width: 1672, height: 941 },
-            { src: heroJewels, alt: "Seleção de joias Vesta sobre areia à beira-mar", width: 1365, height: 768 },
+            { src: heroCoconut, alt: "Brincos de pérola Vesta dentro de coco à beira da piscina", width: 1024, height: 576 },
           ].map((slide, index) => (
             <img
               key={slide.src}
