@@ -53,9 +53,6 @@ export function VestaShell() {
 
   return (
     <>
-      <div className="announcement">
-        À prova d'água & suor · Frete grátis para todo o Brasil acima de R$ 300 · Pagamento via Mercado Pago
-      </div>
       <header className="site-header">
         <nav className="desktop-nav" aria-label="Navegação principal">
           {navItems.map((item) => (
