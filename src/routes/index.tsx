@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { fetchShopifyProducts, getProductCategory } from "@/lib/shopify";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import heroLifestyle from "@/assets/vesta-hero-lifestyle.png";
+import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
 import heroJewels from "@/assets/vesta-hero-jewels.png";
 import collectionImage from "@/assets/vesta-collection.jpg";
 
@@ -84,10 +84,17 @@ function Index() {
       <section className="hero">
         <div className="hero-carousel">
           {[
-            { src: heroLifestyle, alt: "Joias Vesta à beira-mar" },
-            { src: heroJewels, alt: "Seleção de joias Vesta sobre areia à beira-mar" },
+            { src: heroPearls.url, alt: "Colares de ouro e pulseira de pérolas Vesta sobre a grade à beira-mar ao entardecer", width: 1672, height: 941 },
+            { src: heroJewels, alt: "Seleção de joias Vesta sobre areia à beira-mar", width: 1365, height: 768 },
           ].map((slide, index) => (
-            <img key={slide.src} src={slide.src} alt={slide.alt} width={1365} height={768} className={index === activeHero ? "active" : ""} />
+            <img
+              key={slide.src}
+              src={slide.src}
+              alt={slide.alt}
+              width={slide.width}
+              height={slide.height}
+              className={index === activeHero ? "active" : ""}
+            />
           ))}
         </div>
         <div className="hero-shade" />
