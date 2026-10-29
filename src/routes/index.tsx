@@ -6,8 +6,15 @@ import { ProductCard } from "@/components/product-card";
 import { fetchShopifyProducts, getProductCategory } from "@/lib/shopify";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
+import heroCoconut from "@/assets/vesta-hero-coconut.png.asset.json";
 import heroJewels from "@/assets/vesta-hero-jewels.png";
 import collectionImage from "@/assets/vesta-collection.jpg";
+
+const heroSlides = [
+  { src: heroPearls.url, alt: "Colares de ouro e pulseira de pérolas Vesta sobre a grade à beira-mar ao entardecer", width: 1672, height: 941 },
+  { src: heroCoconut.url, alt: "Brincos de ouro com pérola em meia noz de coco à beira da piscina, com flor de jasmim e linho", width: 1672, height: 941 },
+  { src: heroJewels, alt: "Seleção de joias Vesta sobre areia à beira-mar", width: 1365, height: 768 },
+];
 
 const productsQuery = queryOptions({
   queryKey: ["shopify-products"],
