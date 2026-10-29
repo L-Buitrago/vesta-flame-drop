@@ -61,7 +61,7 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    const timer = window.setInterval(() => setActiveHero((current) => (current + 1) % 2), 10000);
+    const timer = window.setInterval(() => setActiveHero((current) => (current + 1) % heroSlides.length), 10000);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -90,10 +90,7 @@ function Index() {
     <main>
       <section className="hero">
         <div className="hero-carousel">
-          {[
-            { src: heroPearls.url, alt: "Colares de ouro e pulseira de pérolas Vesta sobre a grade à beira-mar ao entardecer", width: 1672, height: 941 },
-            { src: heroJewels, alt: "Seleção de joias Vesta sobre areia à beira-mar", width: 1365, height: 768 },
-          ].map((slide, index) => (
+          {heroSlides.map((slide, index) => (
             <img
               key={slide.src}
               src={slide.src}
