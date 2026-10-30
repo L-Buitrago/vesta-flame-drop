@@ -26,7 +26,7 @@ test("earring in an English title is not categorized as a ring", () => {
 });
 
 test("an empty Shopify catalog stays empty", async () => {
-  globalThis.fetch = (async () => Response.json({ data: { products: {
+  globalThis.fetch = (async (_url, _init) => Response.json({ data: { products: {
     edges: [], pageInfo: { hasNextPage: false, endCursor: null },
   } } })) as typeof fetch;
   expect(await fetchShopifyProducts()).toEqual([]);
