@@ -393,12 +393,149 @@ a { color: inherit; text-decoration: none; }
 .footer h3 { margin-bottom:18px; font-weight:600; }
 .footer>div:not(.footer-brand) { display:flex; flex-direction:column; }
 .copyright { position:absolute; bottom:25px; left:5vw; text-transform:uppercase; letter-spacing:.15em; font-size:9px; }
-.mobile-menu,.search-overlay,.cart-layer { position:fixed; inset:0; z-index:60; }
-.mobile-menu { background:var(--background); padding:30px; display:flex; flex-direction:column; align-items:center; gap:24px; animation:fadeIn .35s ease; }
-.mobile-menu>button { align-self:flex-end; }
-.mobile-brand { display:flex; flex-direction:column; align-items:center; margin:6vh 0 2vh; }
-.mobile-brand span { font-size:42px; font-weight:600; }
-.mobile-menu>a { font:600 28px/1.2 var(--font-serif); }
+/* ── Crystal Glass Mobile Menu ── */
+.crystal-menu { position:fixed; inset:0; z-index:60; }
+.crystal-menu .crystal-backdrop {
+  position:absolute; inset:0;
+  background:oklch(0.08 0.02 60 / 60%);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  animation:crystalBackdropIn .4s ease forwards;
+}
+.crystal-menu.closing .crystal-backdrop {
+  animation:crystalBackdropOut .42s ease forwards;
+}
+.crystal-panel {
+  position:absolute; top:0; right:0;
+  width:min(420px,88vw); height:100%;
+  background:oklch(0.14 0.018 60 / 72%);
+  backdrop-filter:blur(40px) saturate(1.4); -webkit-backdrop-filter:blur(40px) saturate(1.4);
+  border-left:1px solid oklch(1 0 0 / 12%);
+  display:flex; flex-direction:column;
+  padding:36px 34px;
+  overflow:hidden;
+  clip-path:inset(0 0 0 100%);
+  animation:crystalPanelIn .5s cubic-bezier(.16,1,.3,1) forwards;
+}
+.crystal-menu.closing .crystal-panel {
+  animation:crystalPanelOut .42s cubic-bezier(.4,0,.6,1) forwards;
+}
+
+/* Luminous border glow */
+.crystal-border-glow {
+  position:absolute; top:0; left:-1px; bottom:0; width:2px;
+  background:linear-gradient(
+    180deg,
+    oklch(0.76 0.055 72 / 0%) 0%,
+    oklch(0.76 0.055 72 / 60%) 30%,
+    oklch(0.85 0.08 72 / 90%) 50%,
+    oklch(0.76 0.055 72 / 60%) 70%,
+    oklch(0.76 0.055 72 / 0%) 100%
+  );
+  filter:blur(1px);
+  pointer-events:none;
+}
+
+/* Diagonal light reflection */
+.crystal-reflection {
+  position:absolute; top:-50%; left:-50%;
+  width:200%; height:200%;
+  background:linear-gradient(
+    115deg,
+    transparent 42%,
+    oklch(1 0 0 / 4%) 44%,
+    oklch(1 0 0 / 8%) 46%,
+    oklch(1 0 0 / 4%) 48%,
+    transparent 50%
+  );
+  animation:crystalShimmer 6s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.crystal-close {
+  align-self:flex-end;
+  color:oklch(0.92 0.01 72);
+  transition:color .3s ease, transform .3s ease;
+}
+.crystal-close:hover { color:oklch(0.76 0.055 72); transform:rotate(90deg); }
+
+.crystal-brand {
+  display:flex; flex-direction:column; align-items:center;
+  margin:6vh 0 5vh;
+}
+.crystal-brand span {
+  font:600 46px/1 var(--font-serif);
+  letter-spacing:.22em; padding-left:.22em;
+  color:oklch(0.96 0.008 72);
+  text-shadow:0 0 30px oklch(0.76 0.055 72 / 20%);
+}
+.crystal-brand small {
+  margin-top:6px;
+  font-size:8px; letter-spacing:.42em; padding-left:.42em;
+  font-family:var(--font-sans); font-weight:500;
+  color:oklch(0.76 0.055 72 / 80%);
+}
+
+.crystal-nav {
+  display:flex; flex-direction:column;
+  align-items:center; gap:6px;
+  flex:1;
+}
+
+.crystal-link {
+  position:relative;
+  display:flex; flex-direction:column; align-items:center;
+  padding:14px 24px;
+  font:600 26px/1.2 var(--font-serif);
+  color:oklch(0.92 0.008 72);
+  opacity:0;
+  animation:crystalLinkIn .55s cubic-bezier(.16,1,.3,1) forwards;
+  transition:color .3s ease;
+}
+.crystal-menu.closing .crystal-link {
+  animation:crystalLinkOut .3s ease forwards;
+}
+.crystal-link:hover { color:oklch(0.76 0.055 72); }
+
+/* Animated underline */
+.crystal-link-line {
+  position:absolute; bottom:6px; left:50%; right:50%;
+  height:1px;
+  background:linear-gradient(90deg, oklch(0.76 0.055 72 / 0%), oklch(0.76 0.055 72 / 90%), oklch(0.76 0.055 72 / 0%));
+  transition:left .4s cubic-bezier(.16,1,.3,1), right .4s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+}
+.crystal-link:hover .crystal-link-line {
+  left:20%; right:20%;
+}
+
+/* Decorative accent line */
+.crystal-accent-line {
+  width:36px; height:1px; margin:auto auto 28px;
+  background:oklch(0.76 0.055 72 / 50%);
+  box-shadow:0 0 12px oklch(0.76 0.055 72 / 30%);
+}
+
+/* Crystal menu keyframes */
+@keyframes crystalBackdropIn { from { opacity:0; } to { opacity:1; } }
+@keyframes crystalBackdropOut { from { opacity:1; } to { opacity:0; } }
+@keyframes crystalPanelIn { from { clip-path:inset(0 0 0 100%); } to { clip-path:inset(0 0 0 0%); } }
+@keyframes crystalPanelOut { from { clip-path:inset(0 0 0 0%); } to { clip-path:inset(0 0 0 100%); } }
+@keyframes crystalLinkIn {
+  from { opacity:0; transform:translateY(-16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes crystalLinkOut {
+  from { opacity:1; transform:translateY(0); }
+  to { opacity:0; transform:translateY(10px); }
+}
+@keyframes crystalShimmer {
+  0%, 100% { transform:translateX(-30%) translateY(-30%) rotate(0deg); }
+  50% { transform:translateX(30%) translateY(30%) rotate(0deg); }
+}
+
+.search-overlay,.cart-layer { position:fixed; inset:0; z-index:60; }
+.mobile-menu-button { display:none; }
+.search-overlay { background:color-mix(in oklab,var(--background) 98%,transparent); padding:12vh 6vw; animation:fadeIn .3s ease; backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); }
 .search-overlay { background:color-mix(in oklab,var(--background) 98%,transparent); padding:12vh 6vw; animation:fadeIn .3s ease; backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); }
 .search-inner { max-width:900px; margin:auto; }
 .search-inner>button { float:right; }

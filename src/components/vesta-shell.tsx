@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Menu, Search, ShoppingBag, UserRound, X, Minus, Plus, Loader2, ShieldCheck, CreditCard, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
 import { fetchShopifyProducts, formatPrice, getShopifyCartPermalink } from "@/lib/shopify";
@@ -17,7 +17,16 @@ const navItems = [
 
 export function VestaShell() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuClosing, setMenuClosing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const closeMenu = useCallback(() => {
+    setMenuClosing(true);
+    setTimeout(() => {
+      setMenuOpen(false);
+      setMenuClosing(false);
+    }, 420);
+  }, []);
   const [query, setQuery] = useState("");
   const { items, isOpen, setOpen, updateQuantity, removeItem, isLoading, isSyncing, getCheckoutUrl, syncCart } = useCartStore();
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -89,25 +98,36 @@ export function VestaShell() {
       </header>
 
       {menuOpen && (
-        <div className="mobile-menu">
-          <Button variant="ghost" size="icon" aria-label="Fechar menu" onClick={() => setMenuOpen(false)}>
-            <X />
-          </Button>
-          <div className="mobile-brand">
-            <span>VESTA</span>
-            <small>FINE JEWELRY</small>
+        <div className={`crystal-menu ${menuClosing ? 'closing' : ''}`}>
+          <div className="crystal-backdrop" onClick={closeMenu} />
+          <div className="crystal-panel">
+            <div className="crystal-reflection" />
+            <div className="crystal-border-glow" />
+            <Button variant="ghost" size="icon" className="crystal-close" aria-label="Fechar menu" onClick={closeMenu}>
+              <X />
+            </Button>
+            <div className="crystal-brand">
+              <span>VESTA</span>
+              <small>FINE JEWELRY</small>
+            </div>
+            <nav className="crystal-nav">
+              {navItems.map((item, i) => (
+                <Link
+                  key={item.label}
+                  to="/"
+                  search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
+                  hash={item.hash}
+                  className="crystal-link"
+                  style={{ animationDelay: `${0.12 + i * 0.06}s` }}
+                  onClick={closeMenu}
+                >
+                  <span className="crystal-link-text">{item.label}</span>
+                  <span className="crystal-link-line" />
+                </Link>
+              ))}
+            </nav>
+            <div className="crystal-accent-line" />
           </div>
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              to="/"
-              search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
-              hash={item.hash}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
         </div>
       )}
 
