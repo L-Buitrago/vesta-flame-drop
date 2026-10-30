@@ -63,20 +63,7 @@ export function VestaShell() {
   return (
     <>
       <header className="site-header">
-        <nav className="desktop-nav" aria-label="Navegação principal">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              to="/"
-              search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
-              hash={item.hash}
-              className="nav-link"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <Button variant="ghost" size="icon" className="mobile-menu-button" aria-label="Abrir menu" onClick={() => setMenuOpen(true)}>
+        <Button variant="ghost" size="icon" className="menu-trigger" aria-label="Abrir menu" onClick={() => setMenuOpen(true)}>
           <Menu />
         </Button>
         <Link to="/" className="brand" aria-label="Vesta Fine Jewelry">
