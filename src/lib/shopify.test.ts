@@ -16,7 +16,7 @@ test("category filters include earrings beyond the first catalog page", async ()
     } } });
   }) as typeof fetch;
   const products = await fetchShopifyProducts(50);
-  expect(calls.map(call => call.after)).toEqual([undefined, "page-1"]);
+  expect(calls.map(call => call['after'])).toEqual([undefined, "page-1"]);
   expect(products.filter(product => getProductCategory(product) === "brincos").map(product => product.node.title)).toEqual(["Brinco Classic"]);
 });
 
