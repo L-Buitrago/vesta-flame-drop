@@ -36,7 +36,7 @@ export function VestaShell() {
 
   const { data: catalog } = useQuery({
     queryKey: ["shopify-products"],
-    queryFn: () => fetchShopifyProducts(50),
+    queryFn: () => fetchShopifyProducts(),
     enabled: searchOpen,
   });
   const filtered = query.trim()
