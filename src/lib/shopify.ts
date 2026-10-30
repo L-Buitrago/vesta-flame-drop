@@ -1,10 +1,6 @@
 import { toast } from "sonner";
-import anelChama from "@/assets/anel-chama.jpg";
-import brincosOliva from "@/assets/brincos-oliva.jpg";
-import colarEmber from "@/assets/colar-ember.jpg";
-import pulseiraHestia from "@/assets/pulseira-hestia.jpg";
 
-export const SHOPIFY_API_VERSION = "2025-07";
+export const SHOPIFY_API_VERSION = "2026-10";
 export const SHOPIFY_STORE_PERMANENT_DOMAIN = "29gv1c-1r.myshopify.com";
 export const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 export const SHOPIFY_STOREFRONT_TOKEN = "3aa040a2d14c3d9543e83955162bd41d";
@@ -46,11 +42,11 @@ export function getProductCategory(product: ShopifyProduct): "colares" | "pulsei
   const tags = (product.node.tags || []).map((t) => t.toLowerCase()).join(" ");
   const text = `${title} ${type} ${tags}`;
 
-  if (text.includes("ring") || text.includes("anel") || text.includes("anéis") || text.includes("aliança")) {
-    return "aneis";
-  }
   if (text.includes("earring") || text.includes("brinco") || text.includes("argola") || text.includes("pendientes") || text.includes("hoop")) {
     return "brincos";
+  }
+  if (text.includes("ring") || text.includes("anel") || text.includes("anéis") || text.includes("aliança")) {
+    return "aneis";
   }
   if (text.includes("bracelet") || text.includes("pulseira") || text.includes("bangle") || text.includes("bracelete") || text.includes("cuff")) {
     return "pulseiras";
@@ -99,8 +95,9 @@ export async function storefrontApiRequest(query: string, variables: Record<stri
 }
 
 export const STOREFRONT_QUERY = `
-  query GetProducts($first: Int!, $query: String) {
-    products(first: $first, query: $query) {
+  query GetProducts($first: Int!, $query: String, $after: String) {
+    products(first: $first, query: $query, after: $after) {
+      pageInfo { hasNextPage endCursor }
       edges {
         node {
           id
@@ -198,250 +195,26 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
-export const FALLBACK_PRODUCTS: ShopifyProduct[] = [
-  {
-    node: {
-      id: "gid://shopify/Product/anel-chama",
-      title: "Anel Chama",
-      description: "Uma chama esculpida em ouro 18k, polida à mão para capturar e devolver a luz.",
-      handle: "anel-chama",
-      priceRange: { minVariantPrice: { amount: "1890.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: anelChama, altText: "Anel Chama em ouro 18k" } },
-          { node: { url: pulseiraHestia, altText: "Anel Chama vista aproximada" } },
-        ],
-      },
-      variants: {
-        edges: [12, 14, 16, 18, 20].map((size) => ({
-          node: {
-            id: `gid://shopify/ProductVariant/anel-chama-${size}`,
-            title: `Aro ${size}`,
-            price: { amount: "1890.00", currencyCode: "BRL" },
-            availableForSale: true,
-            selectedOptions: [{ name: "Tamanho", value: `Aro ${size}` }],
-          },
-        })),
-      },
-      options: [{ name: "Tamanho", values: ["Aro 12", "Aro 14", "Aro 16", "Aro 18", "Aro 20"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/brincos-oliva",
-      title: "Brincos Oliva",
-      description: "Folhas de oliveira em ouro 18k, símbolo de permanência e serenidade.",
-      handle: "brincos-oliva",
-      priceRange: { minVariantPrice: { amount: "1490.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: brincosOliva, altText: "Brincos Oliva em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [
-          {
-            node: {
-              id: "gid://shopify/ProductVariant/brincos-oliva-default",
-              title: "Tamanho único",
-              price: { amount: "1490.00", currencyCode: "BRL" },
-              availableForSale: true,
-              selectedOptions: [{ name: "Title", value: "Tamanho único" }],
-            },
-          },
-        ],
-      },
-      options: [{ name: "Title", values: ["Tamanho único"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/colar-ember",
-      title: "Colar Ember",
-      description: "Uma centelha delicada suspensa por corrente fina em ouro 18k.",
-      handle: "colar-ember",
-      priceRange: { minVariantPrice: { amount: "2190.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: colarEmber, altText: "Colar Ember em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [
-          {
-            node: {
-              id: "gid://shopify/ProductVariant/colar-ember-default",
-              title: "45cm",
-              price: { amount: "2190.00", currencyCode: "BRL" },
-              availableForSale: true,
-              selectedOptions: [{ name: "Comprimento", value: "45cm" }],
-            },
-          },
-        ],
-      },
-      options: [{ name: "Comprimento", values: ["45cm"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/pulseira-hestia",
-      title: "Pulseira Héstia",
-      description: "Bracelete em ouro 18k gravado com o movimento contínuo do fogo.",
-      handle: "pulseira-hestia",
-      priceRange: { minVariantPrice: { amount: "3900.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: pulseiraHestia, altText: "Pulseira Héstia em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [
-          {
-            node: {
-              id: "gid://shopify/ProductVariant/pulseira-hestia-default",
-              title: "Tamanho único",
-              price: { amount: "3900.00", currencyCode: "BRL" },
-              availableForSale: false,
-              selectedOptions: [{ name: "Title", value: "Tamanho único" }],
-            },
-          },
-        ],
-      },
-      options: [{ name: "Title", values: ["Tamanho único"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/brinco-alento",
-      title: "Brinco Alento",
-      description: "Um traço de ouro leve como o primeiro sopro que acende a chama.",
-      handle: "brinco-alento",
-      priceRange: { minVariantPrice: { amount: "890.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: brincosOliva, altText: "Brinco Alento em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [
-          {
-            node: {
-              id: "gid://shopify/ProductVariant/brinco-alento-default",
-              title: "Tamanho único",
-              price: { amount: "890.00", currencyCode: "BRL" },
-              availableForSale: true,
-              selectedOptions: [{ name: "Title", value: "Tamanho único" }],
-            },
-          },
-        ],
-      },
-      options: [{ name: "Title", values: ["Tamanho único"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/gargantilha-ignea",
-      title: "Gargantilha Ígnea",
-      description: "O calor do ouro desenhado rente à pele em uma linha essencial.",
-      handle: "gargantilha-ignea",
-      priceRange: { minVariantPrice: { amount: "2890.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: colarEmber, altText: "Gargantilha Ígnea em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [
-          {
-            node: {
-              id: "gid://shopify/ProductVariant/gargantilha-ignea-default",
-              title: "40cm",
-              price: { amount: "2890.00", currencyCode: "BRL" },
-              availableForSale: true,
-              selectedOptions: [{ name: "Comprimento", value: "40cm" }],
-            },
-          },
-        ],
-      },
-      options: [{ name: "Comprimento", values: ["40cm"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/anel-solsticio",
-      title: "Anel Solstício",
-      description: "Volumes luminosos celebram o instante em que a luz muda de direção.",
-      handle: "anel-solsticio",
-      priceRange: { minVariantPrice: { amount: "2490.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: anelChama, altText: "Anel Solstício em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [12, 14, 16, 18, 20].map((size) => ({
-          node: {
-            id: `gid://shopify/ProductVariant/anel-solsticio-${size}`,
-            title: `Aro ${size}`,
-            price: { amount: "2490.00", currencyCode: "BRL" },
-            availableForSale: true,
-            selectedOptions: [{ name: "Tamanho", value: `Aro ${size}` }],
-          },
-        })),
-      },
-      options: [{ name: "Tamanho", values: ["Aro 12", "Aro 14", "Aro 16", "Aro 18", "Aro 20"] }],
-    },
-  },
-  {
-    node: {
-      id: "gid://shopify/Product/alianca-vesta",
-      title: "Aliança Vesta",
-      description: "Um círculo contínuo, lapidado para atravessar gerações.",
-      handle: "alianca-vesta",
-      priceRange: { minVariantPrice: { amount: "1290.00", currencyCode: "BRL" } },
-      images: {
-        edges: [
-          { node: { url: pulseiraHestia, altText: "Aliança Vesta em ouro 18k" } },
-        ],
-      },
-      variants: {
-        edges: [12, 14, 16, 18, 20].map((size) => ({
-          node: {
-            id: `gid://shopify/ProductVariant/alianca-vesta-${size}`,
-            title: `Aro ${size}`,
-            price: { amount: "1290.00", currencyCode: "BRL" },
-            availableForSale: true,
-            selectedOptions: [{ name: "Tamanho", value: `Aro ${size}` }],
-          },
-        })),
-      },
-      options: [{ name: "Tamanho", values: ["Aro 12", "Aro 14", "Aro 16", "Aro 18", "Aro 20"] }],
-    },
-  },
-];
-
-export async function fetchShopifyProducts(first = 50, query?: string): Promise<ShopifyProduct[]> {
-  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
-  const edges = (data?.data?.products?.edges ?? []) as ShopifyProduct[];
-  if (edges.length > 0) {
-    return edges;
-  }
-  let filtered = FALLBACK_PRODUCTS;
-  if (query) {
-    const q = query.toLowerCase();
-    filtered = filtered.filter((p) => p.node.title.toLowerCase().includes(q) || p.node.description.toLowerCase().includes(q));
-  }
-  return filtered.slice(0, first);
+// `first` is the page size, not a total catalog limit.
+export async function fetchShopifyProducts(first = 250, query?: string): Promise<ShopifyProduct[]> {
+  const products: ShopifyProduct[] = [];
+  let after: string | undefined;
+  do {
+    const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query, after });
+    const connection = data?.data?.products;
+    if (!connection) throw new Error("Não foi possível carregar as joias. Tente novamente.");
+    products.push(...(connection.edges as ShopifyProduct[]));
+    if (!connection.pageInfo?.hasNextPage) break;
+    const cursor = connection.pageInfo.endCursor;
+    if (!cursor || cursor === after) throw new Error("Não foi possível carregar todas as joias.");
+    after = cursor;
+  } while (after);
+  return products;
 }
 
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct["node"] | null> {
   const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
-  const product = data?.data?.product as ShopifyProduct["node"] | null;
-  if (product) {
-    return product;
-  }
-  const fallback = FALLBACK_PRODUCTS.find((p) => p.node.handle === handle);
-  return fallback ? fallback.node : null;
+  return (data?.data?.product as ShopifyProduct["node"] | null) ?? null;
 }
 
 export const formatPrice = (amount: string | number, currencyCode = "BRL") =>

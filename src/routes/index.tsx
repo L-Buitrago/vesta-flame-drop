@@ -11,7 +11,7 @@ import collectionImage from "@/assets/vesta-collection.jpg";
 
 const productsQuery = queryOptions({
   queryKey: ["shopify-products"],
-  queryFn: () => fetchShopifyProducts(50),
+  queryFn: () => fetchShopifyProducts(),
 });
 
 export const Route = createFileRoute("/")({
@@ -25,6 +25,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Joias brasileiras em ouro 18k e aço 316L resistentes à água." },
       { property: "og:title", content: "VESTA Fine Jewelry — Drop 01 Chama Viva" },
       { property: "og:description", content: "Conheça Chama Viva, a primeira coleção limitada da VESTA." },
+      { property: "og:image", content: heroPearls.url },
+      { name: "twitter:image", content: heroPearls.url },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -170,13 +172,14 @@ function Index() {
         {/* Category Filter Tabs */}
         <div className="category-filter-bar">
           {categories.map((cat) => (
-            <button
+            <Button
+              variant="ghost"
               key={cat.id}
               className={`filter-pill ${categoria === cat.id ? "active" : ""}`}
               onClick={() => navigate({ search: { categoria: cat.id }, hash: "drop-01" })}
             >
               {cat.label} ({counts[cat.id] ?? 0})
-            </button>
+            </Button>
           ))}
         </div>
 

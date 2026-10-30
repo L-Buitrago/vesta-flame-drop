@@ -16,7 +16,7 @@ const productQuery = (handle: string) =>
 
 const recommendationsQuery = queryOptions({
   queryKey: ["shopify-products"],
-  queryFn: () => fetchShopifyProducts(20),
+  queryFn: () => fetchShopifyProducts(),
 });
 
 export const Route = createFileRoute("/produto/$productId")({
@@ -30,6 +30,10 @@ export const Route = createFileRoute("/produto/$productId")({
     { name: "description", content: loaderData?.description ?? "Joia de edição limitada VESTA." },
     { property: "og:title", content: `${loaderData?.title ?? "Joia"} — VESTA` },
     { property: "og:description", content: loaderData?.description ?? "Joia de edição limitada VESTA." },
+    ...(loaderData?.images.edges[0]?.node.url.startsWith("https://") ? [
+      { property: "og:image", content: loaderData.images.edges[0].node.url },
+      { name: "twitter:image", content: loaderData.images.edges[0].node.url },
+    ] : []),
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ]}),
