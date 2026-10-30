@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { afterEach, expect, test } from "bun:test";
 import { fetchShopifyProducts, getProductCategory, type ShopifyProduct } from "./shopify";
 
