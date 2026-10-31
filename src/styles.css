@@ -297,9 +297,60 @@ a { color: inherit; text-decoration: none; }
 .countdown { display:flex; gap:36px; margin:28px 0 34px; }
 .countdown div { display:flex; flex-direction:column; min-width:48px; position:relative; }
 .countdown div:not(:last-child)::after { content:"·"; position:absolute; right:-20px; top:0; font-size:24px; color:var(--accent); opacity:.8; line-height:1; }
-.countdown strong { font:600 30px/1 var(--font-serif); letter-spacing:.02em; }
-.countdown span { margin-top:8px; font-size:8px; letter-spacing:.22em; text-transform:uppercase; opacity:.85; }
-.hero-actions { display:flex; align-items:center; gap:30px; }
+.hero-actions { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.hero-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 32px;
+  background: #ffffff;
+  color: #111111 !important;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border: 1px solid #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transition: all .35s cubic-bezier(.16, 1, .3, 1);
+  text-decoration: none;
+}
+.hero-primary-btn:hover {
+  background: transparent;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+.hero-scroll-cue {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  z-index: 5;
+  text-decoration: none;
+  transition: all .3s ease;
+}
+.hero-scroll-cue:hover {
+  color: #ffffff;
+  transform: translateX(-50%) translateY(3px);
+}
+.hero-scroll-cue .scroll-arrow {
+  font-size: 13px;
+  animation: heroArrowBounce 2s infinite ease-in-out;
+}
+@keyframes heroArrowBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+
 .vesta-button { min-height:48px; padding:0 28px; border:1px solid var(--foreground); background:var(--foreground); color:var(--background); font-size:10px; letter-spacing:.18em; text-transform:uppercase; transition:all .45s cubic-bezier(.16,1,.3,1); }
 .vesta-button:hover { background:transparent; color:var(--foreground); transform:translateY(-2px); }
 .hero .vesta-button { border-color:var(--background); background:color-mix(in oklab,var(--background) 8%,transparent); color:var(--background); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }

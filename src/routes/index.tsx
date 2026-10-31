@@ -113,11 +113,18 @@ function Index() {
             ))}
           </div>
           <div className="hero-actions">
+            <a href="#drop-01" className="hero-primary-btn">
+              Ver Coleção
+            </a>
             <a href="#acesso" className="line-link light">
               Lista VIP
             </a>
           </div>
         </div>
+        <a href="#drop-01" className="hero-scroll-cue" aria-label="Ver produtos da coleção">
+          <span>Explorar Joias</span>
+          <span className="scroll-arrow">↓</span>
+        </a>
       </section>
 
       {/* Murano-inspired Trust Strip */}
@@ -154,7 +161,7 @@ function Index() {
         </div>
       </section>
 
-      <section id="drop-01" className="collection reveal">
+      <section id="drop-01" className="collection">
         <div className="section-heading">
           <div>
             <h2>COLEÇÃO</h2>
