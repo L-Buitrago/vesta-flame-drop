@@ -108,9 +108,20 @@ function ProductPage() {
         <span>{product.title}</span>
       </div>
       <section className="pdp-layout">
-        <div className={`pdp-gallery ${galleryImages.length <= 1 ? "single-image" : ""}`}>
-          {galleryImages.map((node) => (
-            <img key={node.url} src={node.url} alt={node.altText ?? product.title} width={1024} height={1280} loading="lazy" />
+        <div
+          key={`gallery-${selectedVariant?.id ?? "default"}`}
+          className={`pdp-gallery ${galleryImages.length <= 1 ? "single-image" : ""}`}
+        >
+          {galleryImages.map((node, index) => (
+            <img
+              key={node.url}
+              src={node.url}
+              alt={node.altText ?? product.title}
+              width={1024}
+              height={1280}
+              loading="lazy"
+              style={{ animationDelay: `${index * 60}ms` }}
+            />
           ))}
         </div>
         <div className="pdp-info">
@@ -127,20 +138,33 @@ function ProductPage() {
             <div className="sizes">
               <div>
                 <span>{product.options[0]?.name ?? "Variação"}</span>
-                {selectedVariant && <span className="selected-variant-label">{selectedVariant.title}</span>}
+                {selectedVariant && (
+                  <span key={selectedVariant.id} className="selected-variant-label animated-fade">
+                    {selectedVariant.title}
+                  </span>
+                )}
               </div>
               <div>
-                {variants.map((variant) => (
-                  <Button
-                    key={variant.id}
-                    variant="outline"
-                    className={variantId === variant.id ? "selected" : ""}
-                    onClick={() => setVariantId(variant.id)}
-                    disabled={!variant.availableForSale}
-                  >
-                    {variant.title}
-                  </Button>
-                ))}
+                {variants.map((variant) => {
+                  const isSelected = variantId === variant.id;
+                  const lower = variant.title.toLowerCase();
+                  const isGold = lower.includes("gold") || lower.includes("ouro") || lower.includes("dourad");
+                  const isSilver = lower.includes("silver") || lower.includes("prat");
+
+                  return (
+                    <Button
+                      key={variant.id}
+                      variant="outline"
+                      className={`variant-pill ${isSelected ? "selected" : ""}`}
+                      onClick={() => setVariantId(variant.id)}
+                      disabled={!variant.availableForSale}
+                    >
+                      {isGold && <span className="metal-swatch metal-gold" aria-hidden="true" />}
+                      {isSilver && <span className="metal-swatch metal-silver" aria-hidden="true" />}
+                      <span>{variant.title}</span>
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           )}
