@@ -184,9 +184,19 @@ function Index() {
         </div>
 
         {filteredProducts.length === 0 ? (
-          <p className="empty-catalog">Nenhuma joia encontrada nesta categoria no momento.</p>
+          <div className="empty-catalog-editorial">
+            <span className="empty-catalog-symbol">✦</span>
+            <h3>Próximo Lote Exclusivo</h3>
+            <p>Nenhuma joia disponível para pronta entrega nesta categoria no momento.</p>
+            <a href="#acesso" className="empty-catalog-vip-link">
+              Próximo Lote Exclusivo — Cadastre-se na Lista VIP →
+            </a>
+          </div>
         ) : (
-          <div className={`product-grid count-${Math.min(filteredProducts.length, 4)}`}>
+          <div
+            key={categoria ?? "todos"}
+            className={`product-grid count-${Math.min(filteredProducts.length, 4)}`}
+          >
             {filteredProducts.map((product) => (
               <ProductCard key={product.node.id} product={product} />
             ))}
