@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Menu, Search, ShoppingBag, UserRound, X, Minus, Plus, Loader2, ShieldCheck, CreditCard, Sparkles } from "lucide-react";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
@@ -67,11 +67,23 @@ const productMatchesQuery = (product: ShopifyProduct, q: string): boolean => {
 };
 
 export function VestaShell() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isHome = pathname === "/";
+  const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 25);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const closeMenu = useCallback(() => {
     setMenuClosing(true);
@@ -150,7 +162,7 @@ export function VestaShell() {
 
   return (
     <>
-      <header className="site-header">
+      <header className={`site-header ${isHome ? "is-hero-overlay" : "is-solid"} ${isScrolled ? "scrolled" : ""}`}>
         <Button variant="ghost" size="icon" className="menu-trigger" aria-label="Abrir menu" onClick={() => setMenuOpen(true)}>
           <Menu />
         </Button>
