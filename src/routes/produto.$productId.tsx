@@ -5,6 +5,8 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { fetchProductByHandle, fetchShopifyProducts, formatPrice } from "@/lib/shopify";
+import { getProductDescription } from "@/lib/product-descriptions";
+import { filterGalleryByMetal } from "@/lib/product-filtering";
 import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
 
@@ -25,56 +27,29 @@ export const Route = createFileRoute("/produto/$productId")({
     if (!product) throw notFound();
     return product;
   },
-  head: ({ loaderData }) => ({ meta: [
-    { title: `${loaderData?.title ?? "Joia"} — VESTA Fine Jewelry` },
-    { name: "description", content: loaderData?.description ?? "Joia de edição limitada VESTA." },
-    { property: "og:title", content: `${loaderData?.title ?? "Joia"} — VESTA` },
-    { property: "og:description", content: loaderData?.description ?? "Joia de edição limitada VESTA." },
-    ...(loaderData?.images.edges[0]?.node.url.startsWith("https://") ? [
-      { property: "og:image", content: loaderData.images.edges[0].node.url },
-      { name: "twitter:image", content: loaderData.images.edges[0].node.url },
-    ] : []),
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary_large_image" },
-  ]}),
+  head: ({ loaderData }) => {
+    const desc = loaderData
+      ? getProductDescription(loaderData)
+      : "Joia de edição limitada VESTA.";
+    return {
+      meta: [
+        { title: `${loaderData?.title ?? "Joia"} — VESTA Fine Jewelry` },
+        { name: "description", content: desc },
+        { property: "og:title", content: `${loaderData?.title ?? "Joia"} — VESTA` },
+        { property: "og:description", content: desc },
+        ...(loaderData?.images.edges[0]?.node.url.startsWith("https://")
+          ? [
+              { property: "og:image", content: loaderData.images.edges[0].node.url },
+              { name: "twitter:image", content: loaderData.images.edges[0].node.url },
+            ]
+          : []),
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+    };
+  },
   component: ProductPage,
 });
-
-function formatProductDescription(description?: string, title?: string) {
-  const isGenericOrRaw =
-    !description ||
-    description.trim() === "" ||
-    description.includes("SPECIFICATIONS") ||
-    description.includes("High-concerned chemical") ||
-    description.includes("Pulseira com cravação");
-
-  if (!isGenericOrRaw) {
-    return description;
-  }
-
-  const lowerTitle = (title ?? "").toLowerCase();
-
-  if (
-    lowerTitle.includes("colar") ||
-    lowerTitle.includes("necklace") ||
-    lowerTitle.includes("pendant") ||
-    lowerTitle.includes("pingente") ||
-    lowerTitle.includes("chain")
-  ) {
-    return "Colar refinado com pingente exclusivo e banho especial de alta durabilidade. Uma joia atemporal em aço inoxidável cirúrgico, totalmente à prova d'água e ao suor, criada para elevar qualquer visual com elegância.";
-  }
-  if (lowerTitle.includes("brinco") || lowerTitle.includes("earring")) {
-    return "Brinco com design sofisticado e acabamento polido. Peça hipoalergênica, leve e resistente à água, perfeita para iluminar o rosto com elegância em qualquer ocasião.";
-  }
-  if (lowerTitle.includes("anel") || lowerTitle.includes("ring")) {
-    return "Anel com acabamento primoroso e encaixe confortável. Resistente à água e ao suor, combinando estética contemporânea e alta durabilidade para uso contínuo.";
-  }
-  if (lowerTitle.includes("pulseira") || lowerTitle.includes("bracelet") || lowerTitle.includes("bracelete")) {
-    return "Pulseira com elos refinados e cravação especial. Design atemporal e elegante que reflete a luz com intensidade em todos os ângulos, resistente à água e ao suor.";
-  }
-
-  return "Joia fina contemporânea com acabamento premium e banho especial. Peça hipoalergênica, totalmente resistente à água e ao suor, criada para atravessar o tempo com sofisticação.";
-}
 
 function ProductPage() {
   const { productId } = Route.useParams();
@@ -89,12 +64,12 @@ function ProductPage() {
 
   if (!product) return null;
 
-  const displayDescription = formatProductDescription(product.description, product.title);
+  const displayDescription = getProductDescription(product);
   const details = [
     ["Descrição", `${displayDescription} Peça de alto padrão com acabamento polido.`],
-    ["Materiais e cuidados", "Aço inoxidável com banho nobre de alta durabilidade. À prova d'água e de suor. Limpe delicadamente com uma flanela seca para preservar o brilho."],
-    ["Envio e trocas", "Envio segurado com código de rastreamento para todo o Brasil. Garantia de troca em até 7 dias após o recebimento."],
-    ["Embalagem presente", "Todas as joias são entregues em embalagem especial Vesta, pronta para presentear com sofisticação."],
+    ["Materiais e cuidados", "Aço inoxidável cirúrgico com banho nobre de alta durabilidade. Totalmente à prova d'água e de suor. Limpe delicadamente com uma flanela seca para preservar o brilho espelhado."],
+    ["Envio e trocas", "Envio segurado com código de rastreamento para todo o Brasil. Garantia incondicional de troca em até 7 dias após o recebimento."],
+    ["Embalagem presente", "Todas as joias são entregues em embalagem especial Vesta, pronta para presentear com sofisticação e requinte."],
   ];
 
   const handleAdd = async () => {
@@ -113,9 +88,17 @@ function ProductPage() {
   const recs = catalog.filter((item) => item.node.id !== product.id).slice(0, 4);
 
   // Filtra fotos genéricas de lote de fornecedor (banner repetido de 3 colares)
-  const galleryImages = product.images.edges
+  const baseGalleryImages = product.images.edges
     .map((e) => e.node)
     .filter((img) => !img.url.includes("S86269fcc87bd4a7da443c69a4d1d6e97y"));
+
+  // Filtra imagens da galeria de acordo com a variação selecionada (ex: Ouro vs Prata para produtos duplos)
+  const galleryImages = filterGalleryByMetal(
+    baseGalleryImages,
+    selectedVariant?.title,
+    variants,
+    product.handle
+  );
 
   return (
     <main className="pdp">
