@@ -601,13 +601,10 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   z-index: 70;
   pointer-events: none;
-  visibility: hidden;
-  transition: visibility 0s linear 0.4s;
+  overflow: hidden;
 }
 .crystal-menu.is-active {
   pointer-events: auto;
-  visibility: visible;
-  transition-delay: 0s;
 }
 .crystal-menu .crystal-backdrop {
   position: absolute;
@@ -616,10 +613,12 @@ a { color: inherit; text-decoration: none; }
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   opacity: 0;
-  transition: opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  transition: opacity 0.38s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .crystal-menu.is-active .crystal-backdrop {
   opacity: 1;
+  pointer-events: auto;
 }
 .crystal-panel {
   position: absolute;
@@ -1588,9 +1587,6 @@ a { color: inherit; text-decoration: none; }
   .statement.reveal p,
   .statement.reveal > span { opacity:1; transform:none; clip-path:none; transition:none; }
   .statement.reveal::before, .statement.reveal::after { transform:translateX(-50%) scaleX(1); transition:none; }
-  .crystal-panel { transform:none; animation:none; }
-  .crystal-link { opacity:1; transform:none; animation:none; }
-  .crystal-backdrop { animation:none; }
   .product-grid .product-card { animation:none; }
   .search-modal { animation:none; }
 }

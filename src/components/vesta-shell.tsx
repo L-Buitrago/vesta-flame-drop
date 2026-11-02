@@ -231,90 +231,94 @@ export function VestaShell() {
         </div>
       </header>
 
-      <div className={`crystal-menu ${menuOpen ? 'is-active' : ''}`} aria-hidden={!menuOpen}>
+      <div
+        className={`crystal-menu ${menuOpen ? 'is-active' : ''}`}
+        aria-hidden={!menuOpen}
+        inert={!menuOpen ? true : undefined}
+      >
         <div className="crystal-backdrop" onClick={closeMenu} />
-          <div className="crystal-panel">
-            <div className="crystal-header">
-              <div className="crystal-edition-badge">
-                <span className="crystal-pulse-dot" />
-                <span>DROP 01 · CHAMA VIVA</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="crystal-close"
-                aria-label="Fechar menu"
-                onClick={closeMenu}
-              >
-                <X size={20} />
-              </Button>
+        <div className="crystal-panel">
+          <div className="crystal-header">
+            <div className="crystal-edition-badge">
+              <span className="crystal-pulse-dot" />
+              <span>DROP 01 · CHAMA VIVA</span>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="crystal-close"
+              aria-label="Fechar menu"
+              onClick={closeMenu}
+            >
+              <X size={20} />
+            </Button>
+          </div>
 
-            <div className="crystal-brand">
-              <Link to="/" onClick={closeMenu} className="crystal-brand-link">
-                <span>VESTA</span>
-                <small>FINE JEWELRY</small>
-              </Link>
-            </div>
+          <div className="crystal-brand">
+            <Link to="/" onClick={closeMenu} className="crystal-brand-link">
+              <span>VESTA</span>
+              <small>FINE JEWELRY</small>
+            </Link>
+          </div>
 
-            <nav className="crystal-nav">
-              {navItems.map((item, i) => {
-                const catCount = item.cat ? categoryCounts[item.cat] ?? 0 : null;
-                return (
-                  <Link
-                    key={item.label}
-                    to="/"
-                    search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
-                    hash={item.hash}
-                    className="crystal-link"
-                    style={{ transitionDelay: `${0.06 + i * 0.035}s` }}
-                    onClick={closeMenu}
-                  >
-                    <div className="crystal-link-left">
-                      <span className="crystal-link-num">{item.num}</span>
-                      <div className="crystal-link-info">
-                        <span className="crystal-link-title">{item.label}</span>
-                        <span className="crystal-link-sub">{item.subtitle}</span>
-                      </div>
+          <nav className="crystal-nav">
+            {navItems.map((item, i) => {
+              const catCount = item.cat ? categoryCounts[item.cat] ?? 0 : null;
+              return (
+                <Link
+                  key={item.label}
+                  to="/"
+                  search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
+                  hash={item.hash}
+                  className="crystal-link"
+                  style={{ transitionDelay: `${0.06 + i * 0.035}s` }}
+                  onClick={closeMenu}
+                >
+                  <div className="crystal-link-left">
+                    <span className="crystal-link-num">{item.num}</span>
+                    <div className="crystal-link-info">
+                      <span className="crystal-link-title">{item.label}</span>
+                      <span className="crystal-link-sub">{item.subtitle}</span>
                     </div>
-                    <div className="crystal-link-right">
-                      {catCount !== null ? (
-                        catCount === 0 ? (
-                          <span className="crystal-badge-soon">Em breve</span>
-                        ) : (
-                          <span className="crystal-badge-count">({catCount})</span>
-                        )
+                  </div>
+                  <div className="crystal-link-right">
+                    {catCount !== null ? (
+                      catCount === 0 ? (
+                        <span className="crystal-badge-soon">Em breve</span>
                       ) : (
-                        <span className="crystal-link-arrow">→</span>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
-            </nav>
+                        <span className="crystal-badge-count">({catCount})</span>
+                      )
+                    ) : (
+                      <span className="crystal-link-arrow">→</span>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </nav>
 
-            <div className="crystal-footer">
-              <div className="crystal-diferenciais">
-                <div className="crystal-diff-item">
-                  <span className="diff-symbol">✦</span>
-                  <span>100% à prova d'água e suor</span>
-                </div>
-                <div className="crystal-diff-item">
-                  <span className="diff-symbol">✦</span>
-                  <span>Aço Cirúrgico 316L · Garantia Vitalícia</span>
-                </div>
-                <div className="crystal-diff-item">
-                  <span className="diff-symbol">✦</span>
-                  <span>Edição Limitada · Envio Imediato</span>
-                </div>
+          <div className="crystal-footer">
+            <div className="crystal-diferenciais">
+              <div className="crystal-diff-item">
+                <span className="diff-symbol">✦</span>
+                <span>100% à prova d'água e suor</span>
               </div>
-              <a href="#acesso" className="crystal-vip-button" onClick={closeMenu}>
-                <span>Lista VIP · Próximo Drop</span>
-                <span className="vip-arrow">→</span>
-              </a>
+              <div className="crystal-diff-item">
+                <span className="diff-symbol">✦</span>
+                <span>Aço Cirúrgico 316L · Garantia Vitalícia</span>
+              </div>
+              <div className="crystal-diff-item">
+                <span className="diff-symbol">✦</span>
+                <span>Edição Limitada · Envio Imediato</span>
+              </div>
             </div>
+            <a href="#acesso" className="crystal-vip-button" onClick={closeMenu}>
+              <span>Lista VIP · Próximo Drop</span>
+              <span className="vip-arrow">→</span>
+            </a>
           </div>
         </div>
+      </div>
 
       {searchOpen && (
         <div className="search-overlay">
