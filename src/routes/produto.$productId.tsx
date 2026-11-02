@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
-import { fetchProductByHandle, fetchShopifyProducts, formatPrice } from "@/lib/shopify";
+import { fetchProductByHandle, fetchShopifyProducts, formatPrice, isContainFitProduct } from "@/lib/shopify";
 import { getProductDescription } from "@/lib/product-descriptions";
 import { filterGalleryByMetal } from "@/lib/product-filtering";
 import { useCartStore } from "@/stores/cart-store";
@@ -110,7 +110,7 @@ function ProductPage() {
       <section className="pdp-layout">
         <div
           key={`gallery-${selectedVariant?.id ?? "default"}`}
-          className={`pdp-gallery ${galleryImages.length <= 1 ? "single-image" : ""}`}
+          className={`pdp-gallery ${galleryImages.length <= 1 ? "single-image" : ""} ${isContainFitProduct(product.handle, product.title) ? "pdp-gallery--contain" : ""}`}
         >
           {galleryImages.map((node, index) => (
             <img

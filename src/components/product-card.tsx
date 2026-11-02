@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { formatPrice, type ShopifyProduct } from "@/lib/shopify";
+import { formatPrice, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
 import { ShoppingBag, Loader2, Check } from "lucide-react";
@@ -66,10 +66,12 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     }
   };
 
+  const isContain = isContainFitProduct(node.handle, node.title);
+
   return (
     <article className={`product-card ${available ? "" : "sold-out"}`}>
       <Link to="/produto/$productId" params={{ productId: node.handle }}>
-        <div className={`product-image ${validSecondaryNode ? "has-secondary" : ""}`}>
+        <div className={`product-image ${validSecondaryNode ? "has-secondary" : ""} ${isContain ? "product-image--contain" : ""}`}>
           <span className="product-badge">À prova d'água</span>
           {image && <img src={image.url} alt={image.altText ?? node.title} loading="lazy" width={1024} height={1280} />}
           {validSecondaryNode && (

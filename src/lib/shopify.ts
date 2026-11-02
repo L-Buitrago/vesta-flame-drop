@@ -57,6 +57,18 @@ export function getProductCategory(product: ShopifyProduct): "colares" | "pulsei
   return "outros";
 }
 
+const CONTAIN_FIT_HANDLES = new Set([
+  "square-pendants-delicate-stainless-steel-chain-pendant-necklace-for-women-necklace-3",
+  "stainless-steel-bohemian-style-personalized-anklet-1",
+]);
+
+export function isContainFitProduct(handle?: string, title?: string): boolean {
+  if (handle && CONTAIN_FIT_HANDLES.has(handle)) return true;
+  if (!title) return false;
+  const t = title.toLowerCase();
+  return (t.includes("nó e pérolas") && t.includes("colar")) || t.includes("pulseiras glamour");
+}
+
 export async function storefrontApiRequest(query: string, variables: Record<string, unknown> = {}) {
   try {
     const response = await fetch(SHOPIFY_STOREFRONT_URL, {

@@ -4,7 +4,7 @@ import { Menu, Search, ShoppingBag, UserRound, X, Minus, Plus, Loader2, ShieldCh
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
-import { fetchShopifyProducts, formatPrice, getShopifyCartPermalink, getProductCategory, type ShopifyProduct } from "@/lib/shopify";
+import { fetchShopifyProducts, formatPrice, getShopifyCartPermalink, getProductCategory, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
 
 const navItems = [
   { num: "01", label: "Todas as Joias", subtitle: "Acervo Completo Drop 01", cat: "todos", hash: "drop-01" },
@@ -25,6 +25,25 @@ const QUICK_SEARCH_PILLS = [
   "Coração",
 ];
 
+const STOP_WORDS = new Set(["de", "do", "da", "dos", "das", "e", "em", "com", "para", "a", "o", "as", "os", "um", "uma", "no", "na"]);
+
+const CATEGORY_SYNONYMS: Record<string, string> = {
+  colar: "colares",
+  colares: "colares",
+  gargantilha: "colares",
+  choker: "colares",
+  pulseira: "pulseiras",
+  pulseiras: "pulseiras",
+  bracelete: "pulseiras",
+  braceletes: "pulseiras",
+  anel: "aneis",
+  aneis: "aneis",
+  brinco: "brincos",
+  brincos: "brincos",
+  argola: "brincos",
+  argolas: "brincos",
+};
+
 const normalizeSearch = (text: string) =>
   text
     .toLowerCase()
@@ -35,8 +54,8 @@ const normalizeSearch = (text: string) =>
 
 const stemWord = (word: string): string => {
   const w = normalizeSearch(word);
-  if (w.endsWith("es")) return w.slice(0, -2);
-  if (w.endsWith("is")) return w.slice(0, -2) + "l";
+  if (w.endsWith("es") && w.length > 4) return w.slice(0, -2);
+  if (w.endsWith("is") && w.length > 4) return w.slice(0, -2) + "l";
   if (w.endsWith("s") && w.length > 3) return w.slice(0, -1);
   return w;
 };
@@ -45,24 +64,46 @@ const productMatchesQuery = (product: ShopifyProduct, q: string): boolean => {
   const cleanQ = normalizeSearch(q);
   if (!cleanQ) return false;
 
-  const queryTokens = cleanQ.split(/\s+/).filter(Boolean);
-  const queryStems = queryTokens.map(stemWord);
+  const queryTokens = cleanQ
+    .split(/\s+/)
+    .filter((t) => t.length > 0 && !STOP_WORDS.has(t));
+
+  if (queryTokens.length === 0) return false;
 
   const titleNorm = normalizeSearch(product.node.title || "");
+  const category = getProductCategory(product);
+  const tagsNorm = (product.node.tags || []).map(normalizeSearch);
   const descNorm = normalizeSearch(product.node.description || "");
-  const catNorm = normalizeSearch(getProductCategory(product) || "");
-  const tagsNorm = normalizeSearch((product.node.tags || []).join(" "));
-  const typeNorm = normalizeSearch(product.node.productType || "");
 
-  const fullText = `${titleNorm} ${descNorm} ${catNorm} ${tagsNorm} ${typeNorm}`;
-  const fullTokens = fullText.split(/\s+/).filter(Boolean);
-  const fullStems = fullTokens.map(stemWord);
+  const titleWords = titleNorm.split(/[^a-z0-9]+/).filter(Boolean);
+  const tagWords = tagsNorm.flatMap((t) => t.split(/[^a-z0-9]+/).filter(Boolean));
+  const descWords = descNorm.split(/[^a-z0-9]+/).filter((w) => w.length > 2 && !STOP_WORDS.has(w));
 
-  return queryTokens.every((token, index) => {
-    const stem = queryStems[index];
-    if (fullText.includes(token)) return true;
-    if (fullText.includes(stem)) return true;
-    return fullStems.some((pStem) => pStem.includes(stem) || stem.includes(pStem));
+  const allWords = [...titleWords, ...tagWords, category, ...descWords];
+  const allStems = allWords.map(stemWord);
+
+  return queryTokens.every((token) => {
+    const qStem = stemWord(token);
+    const targetCat = CATEGORY_SYNONYMS[token] || CATEGORY_SYNONYMS[qStem];
+
+    // 1. Direct category match
+    if (targetCat && category === targetCat) {
+      return true;
+    }
+
+    // 2. Exact word or prefix match in title, tags, category, description
+    const hasWordMatch = allWords.some((w) => w === token || (token.length >= 3 && w.startsWith(token)));
+    if (hasWordMatch) return true;
+
+    const hasStemMatch = allStems.some((s) => s === qStem || (qStem.length >= 4 && s.startsWith(qStem)));
+    if (hasStemMatch) return true;
+
+    // 3. Substring match in title
+    if (token.length >= 3 && titleNorm.includes(token)) {
+      return true;
+    }
+
+    return false;
   });
 };
 
@@ -221,7 +262,7 @@ export function VestaShell() {
                     search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
                     hash={item.hash}
                     className="crystal-link"
-                    style={{ animationDelay: `${0.08 + i * 0.05}s` }}
+                    style={{ animationDelay: `${0.04 + i * 0.03}s` }}
                     onClick={closeMenu}
                   >
                     <div className="crystal-link-left">
@@ -319,7 +360,8 @@ export function VestaShell() {
                     type="button"
                     className={`search-pill ${normalizeSearch(query) === normalizeSearch(pill) ? "active" : ""}`}
                     onClick={() => {
-                      setQuery(pill);
+                      const next = normalizeSearch(query) === normalizeSearch(pill) ? "" : pill;
+                      setQuery(next);
                       searchInputRef.current?.focus();
                     }}
                   >
@@ -362,7 +404,7 @@ export function VestaShell() {
                         onClick={() => setSearchOpen(false)}
                         className="search-product-card"
                       >
-                        <div className="search-card-thumb">
+                        <div className={`search-card-thumb ${isContainFitProduct(product.node.handle, product.node.title) ? "search-card-thumb--contain" : ""}`}>
                           {imageUrl ? (
                             <img src={imageUrl} alt={product.node.title} loading="lazy" />
                           ) : (
