@@ -112,7 +112,6 @@ export function VestaShell() {
   const isHome = pathname === "/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuClosing, setMenuClosing] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -127,12 +126,19 @@ export function VestaShell() {
   }, []);
 
   const closeMenu = useCallback(() => {
-    setMenuClosing(true);
-    setTimeout(() => {
-      setMenuOpen(false);
-      setMenuClosing(false);
-    }, 400);
+    setMenuOpen(false);
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen]);
 
   const { items, isOpen, setOpen, updateQuantity, removeItem, isLoading, isSyncing, getCheckoutUrl, syncCart } = useCartStore();
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -225,9 +231,8 @@ export function VestaShell() {
         </div>
       </header>
 
-      {menuOpen && (
-        <div className={`crystal-menu ${menuClosing ? 'closing' : ''}`}>
-          <div className="crystal-backdrop" onClick={closeMenu} />
+      <div className={`crystal-menu ${menuOpen ? 'is-active' : ''}`} aria-hidden={!menuOpen}>
+        <div className="crystal-backdrop" onClick={closeMenu} />
           <div className="crystal-panel">
             <div className="crystal-header">
               <div className="crystal-edition-badge">
@@ -262,7 +267,7 @@ export function VestaShell() {
                     search={item.cat ? { categoria: item.cat } : { categoria: undefined }}
                     hash={item.hash}
                     className="crystal-link"
-                    style={{ animationDelay: `${0.04 + i * 0.03}s` }}
+                    style={{ transitionDelay: `${0.06 + i * 0.035}s` }}
                     onClick={closeMenu}
                   >
                     <div className="crystal-link-left">
@@ -310,7 +315,6 @@ export function VestaShell() {
             </div>
           </div>
         </div>
-      )}
 
       {searchOpen && (
         <div className="search-overlay">

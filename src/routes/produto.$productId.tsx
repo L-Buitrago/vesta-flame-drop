@@ -177,13 +177,7 @@ function ProductPage() {
           </Button>
           <div className="product-accordions">
             {details.map(([title, content]) => (
-              <details key={title}>
-                <summary>
-                  {title}
-                  <span>+</span>
-                </summary>
-                <p>{content}</p>
-              </details>
+              <ProductAccordionItem key={title} title={title} content={content} />
             ))}
           </div>
         </div>
@@ -204,3 +198,27 @@ function ProductPage() {
     </main>
   );
 }
+
+function ProductAccordionItem({ title, content }: { title: string; content: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className={`product-accordion-item ${isOpen ? "is-open" : ""}`}>
+      <button
+        type="button"
+        className="product-accordion-header"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+      >
+        <span className="product-accordion-title">{title}</span>
+        <span className="product-accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div className="product-accordion-collapse">
+        <div className="product-accordion-inner">
+          <p>{content}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
