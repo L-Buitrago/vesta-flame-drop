@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
@@ -18,7 +18,10 @@ export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): { categoria?: string | undefined } => ({
     categoria: typeof search["categoria"] === "string" ? (search["categoria"] as string) : undefined,
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(productsQuery),
+  loader: ({ context }) => {
+    // Prefetch em background sem travar o carregamento inicial da página nem exibir o rodapé antes da hora
+    context.queryClient.prefetchQuery(productsQuery);
+  },
   head: () => ({
     meta: [
       { title: "VESTA Joias — Joias em edições limitadas" },
@@ -39,7 +42,7 @@ function Index() {
   const [activeHero, setActiveHero] = useState(0);
   const { categoria = "todos" } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const { data: products } = useSuspenseQuery(productsQuery);
+  const { data: products = [], isLoading } = useQuery(productsQuery);
   useScrollReveal();
 
   useEffect(() => {
@@ -190,7 +193,17 @@ function Index() {
           ))}
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {isLoading ? (
+          <div className="product-grid count-4">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="product-card skeleton-card">
+                <div style={{ aspectRatio: "4/5", background: "var(--secondary)", width: "100%", marginBottom: "16px" }} />
+                <div style={{ height: "16px", width: "70%", background: "var(--border)", marginBottom: "8px" }} />
+                <div style={{ height: "14px", width: "40%", background: "var(--border)" }} />
+              </div>
+            ))}
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="empty-catalog-editorial">
             <span className="empty-catalog-symbol">✦</span>
             <h3>Próximo Lote Exclusivo</h3>
