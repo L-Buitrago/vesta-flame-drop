@@ -223,9 +223,9 @@ export function VestaShell() {
         <Button variant="ghost" size="icon" className="menu-trigger" aria-label="Abrir menu" onClick={() => setMenuOpen(true)}>
           <Menu />
         </Button>
-        <Link to="/" className="brand" aria-label="Vesta Fine Jewelry">
+        <Link to="/" className="brand" aria-label="Vesta Joias">
           <span>VESTA</span>
-          <small>FINE JEWELRY</small>
+          <small>JOIAS</small>
         </Link>
         <div className="header-actions">
           <Button variant="ghost" size="icon" aria-label="Buscar" onClick={() => setSearchOpen(true)}>
@@ -267,7 +267,7 @@ export function VestaShell() {
           <div className="crystal-brand">
             <Link to="/" onClick={closeMenu} className="crystal-brand-link">
               <span>VESTA</span>
-              <small>FINE JEWELRY</small>
+              <small>JOIAS</small>
             </Link>
           </div>
 

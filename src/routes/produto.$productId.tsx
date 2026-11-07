@@ -33,7 +33,7 @@ export const Route = createFileRoute("/produto/$productId")({
       : "Joia de edição limitada VESTA.";
     return {
       meta: [
-        { title: `${loaderData?.title ?? "Joia"} — VESTA Fine Jewelry` },
+        { title: `${loaderData?.title ?? "Joia"} — VESTA Joias` },
         { name: "description", content: desc },
         { property: "og:title", content: `${loaderData?.title ?? "Joia"} — VESTA` },
         { property: "og:description", content: desc },
@@ -125,7 +125,7 @@ function ProductPage() {
           ))}
         </div>
         <div className="pdp-info">
-          <p className="eyebrow">VESTA FINE JEWELRY</p>
+          <p className="eyebrow">VESTA JOIAS</p>
           <h1>{product.title}</h1>
           <p className="pdp-price">
             {formatPrice(
