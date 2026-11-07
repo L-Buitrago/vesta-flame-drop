@@ -191,8 +191,17 @@ export function VestaShell() {
   }, [searchOpen]);
 
   useEffect(() => {
-    if (isOpen) syncCart();
+    if (isOpen) {
+      setIsRedirecting(false);
+      syncCart();
+    }
   }, [isOpen, syncCart]);
+
+  useEffect(() => {
+    const handlePageShow = () => setIsRedirecting(false);
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   const handleCheckout = () => {
     setIsRedirecting(true);
@@ -202,6 +211,7 @@ export function VestaShell() {
     }
     if (checkoutUrl) {
       window.location.href = checkoutUrl;
+      setTimeout(() => setIsRedirecting(false), 6000);
     } else {
       setIsRedirecting(false);
     }
@@ -495,10 +505,10 @@ export function VestaShell() {
               <p>Frete e cupons calculados no checkout oficial.</p>
               <Button
                 className="vesta-button w-full"
-                disabled={!items.length || isLoading || isSyncing || isRedirecting}
+                disabled={!items.length || isRedirecting}
                 onClick={handleCheckout}
               >
-                {isLoading || isSyncing || isRedirecting ? <Loader2 className="animate-spin" /> : "Finalizar compra"}
+                {isRedirecting ? <Loader2 className="animate-spin" /> : "Finalizar compra"}
               </Button>
               <div className="cart-trust-badges">
                 <div className="trust-item">
