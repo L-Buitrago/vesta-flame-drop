@@ -21,9 +21,9 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQuery),
   head: () => ({
     meta: [
-      { title: "VESTA Fine Jewelry — Joias em edições limitadas" },
+      { title: "VESTA Joias — Joias em edições limitadas" },
       { name: "description", content: "Joias brasileiras em ouro 18k e aço 316L resistentes à água." },
-      { property: "og:title", content: "VESTA Fine Jewelry — Drop 01 Chama Viva" },
+      { property: "og:title", content: "VESTA Joias — Drop 01 Chama Viva" },
       { property: "og:description", content: "Conheça Chama Viva, a primeira coleção limitada da VESTA." },
       { property: "og:image", content: heroPearls.url },
       { name: "twitter:image", content: heroPearls.url },

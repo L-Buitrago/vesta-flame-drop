@@ -33,7 +33,7 @@ export const Route = createFileRoute("/produto/$productId")({
       : "Joia de edição limitada VESTA.";
     return {
       meta: [
-        { title: `${loaderData?.title ?? "Joia"} — VESTA Fine Jewelry` },
+        { title: `${loaderData?.title ?? "Joia"} — VESTA Joias` },
         { name: "description", content: desc },
         { property: "og:title", content: `${loaderData?.title ?? "Joia"} — VESTA` },
         { property: "og:description", content: desc },
@@ -65,7 +65,7 @@ function ProductPage() {
   if (!product) return null;
 
   const displayDescription = getProductDescription(product);
-  const details = [
+  const details: [string, string][] = [
     ["Descrição", `${displayDescription} Peça de alto padrão com acabamento polido.`],
     ["Materiais e cuidados", "Aço inoxidável cirúrgico com banho nobre de alta durabilidade. Totalmente à prova d'água e de suor. Limpe delicadamente com uma flanela seca para preservar o brilho espelhado."],
     ["Envio e trocas", "Envio segurado com código de rastreamento para todo o Brasil. Garantia incondicional de troca em até 7 dias após o recebimento."],
@@ -125,7 +125,7 @@ function ProductPage() {
           ))}
         </div>
         <div className="pdp-info">
-          <p className="eyebrow">VESTA FINE JEWELRY</p>
+          <p className="eyebrow">VESTA JOIAS</p>
           <h1>{product.title}</h1>
           <p className="pdp-price">
             {formatPrice(
