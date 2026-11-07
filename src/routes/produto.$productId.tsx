@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
@@ -9,6 +9,7 @@ import { getProductDescription } from "@/lib/product-descriptions";
 import { filterGalleryByMetal } from "@/lib/product-filtering";
 import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
+import { trackViewContent, trackAddToCart } from "@/lib/meta-pixel";
 
 const productQuery = (handle: string) =>
   queryOptions({
@@ -72,6 +73,17 @@ function ProductPage() {
     ["Embalagem presente", "Todas as joias são entregues em embalagem especial Vesta, pronta para presentear com sofisticação e requinte."],
   ];
 
+  useEffect(() => {
+    if (product && selectedVariant) {
+      trackViewContent(
+        product.title,
+        selectedVariant.id,
+        parseFloat(selectedVariant.price.amount),
+        selectedVariant.price.currencyCode,
+      );
+    }
+  }, [product?.id, selectedVariant?.id]);
+
   const handleAdd = async () => {
     if (!selectedVariant) return;
     await addItem({
@@ -82,6 +94,12 @@ function ProductPage() {
       quantity: 1,
       selectedOptions: selectedVariant.selectedOptions ?? [],
     });
+    trackAddToCart(
+      product.title,
+      selectedVariant.id,
+      parseFloat(selectedVariant.price.amount),
+      selectedVariant.price.currencyCode,
+    );
     toast.success(`${product.title} adicionado à sacola!`);
   };
 

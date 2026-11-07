@@ -4,6 +4,7 @@ import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
 import { ShoppingBag, Loader2, Check } from "lucide-react";
 import { useState } from "react";
+import { trackAddToCart } from "@/lib/meta-pixel";
 
 // Identificadores de fotos genéricas compartilhadas de fornecedores do AliExpress (como o banner de 3 colares juntos)
 const GENERIC_SUPPLIER_PATTERNS = [
@@ -57,6 +58,12 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
         quantity: 1,
         selectedOptions: selectedVariant.selectedOptions ?? [],
       });
+      trackAddToCart(
+        node.title,
+        selectedVariant.id,
+        parseFloat(selectedVariant.price.amount),
+        selectedVariant.price.currencyCode,
+      );
       toast.success(`${node.title} adicionado à sacola!`);
     } catch (err) {
       console.error("Erro ao adicionar produto:", err);

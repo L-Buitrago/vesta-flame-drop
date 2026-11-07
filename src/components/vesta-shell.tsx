@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
 import { fetchShopifyProducts, formatPrice, getShopifyCartPermalink, getProductCategory, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
+import { trackInitiateCheckout } from "@/lib/meta-pixel";
 
 const navItems = [
   { num: "01", label: "Todas as Joias", subtitle: "Acervo Completo Drop 01", cat: "todos", hash: "drop-01" },
@@ -205,6 +206,7 @@ export function VestaShell() {
 
   const handleCheckout = () => {
     setIsRedirecting(true);
+    trackInitiateCheckout(count, subtotal, currency);
     let checkoutUrl = getCheckoutUrl();
     if (!checkoutUrl || items.some((i) => !i.lineId || i.lineId.startsWith("local-"))) {
       checkoutUrl = getShopifyCartPermalink(items);
