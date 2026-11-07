@@ -113,7 +113,7 @@ function Index() {
             ))}
           </div>
           <div className="hero-actions">
-            <a href="#drop-01" className="hero-primary-btn">
+            <a href="#drop-01" className="line-link light">
               Ver Coleção
             </a>
             <a href="#acesso" className="line-link light">

@@ -314,29 +314,36 @@ a { color: inherit; text-decoration: none; }
 .countdown { display:flex; gap:36px; margin:28px 0 34px; }
 .countdown div { display:flex; flex-direction:column; min-width:48px; position:relative; }
 .countdown div:not(:last-child)::after { content:"·"; position:absolute; right:-20px; top:0; font-size:24px; color:var(--accent); opacity:.8; line-height:1; }
-.hero-actions { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.hero-actions { display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
 .hero-primary-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 32px;
-  background: #ffffff;
-  color: #111111 !important;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
   font-size: 10px;
   letter-spacing: .2em;
   text-transform: uppercase;
-  font-weight: 600;
-  border: 1px solid #ffffff;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-  transition: all .35s cubic-bezier(.16, 1, .3, 1);
-  text-decoration: none;
-}
-.hero-primary-btn:hover {
-  background: transparent;
+  font-weight: 500;
   color: #ffffff !important;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  text-decoration: none;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: opacity .3s ease;
+}
+.hero-primary-btn:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: #ffffff;
+  transform-origin: left;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+.hero-primary-btn:hover:after {
+  transform: scaleX(.25);
 }
 .hero-scroll-cue {
   position: absolute;
@@ -1640,15 +1647,15 @@ a { color: inherit; text-decoration: none; }
     font-size: 18px;
   }
   .hero-actions {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    max-width: 280px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 24px;
+    flex-wrap: wrap;
+    width: auto;
   }
   .hero-primary-btn {
-    width: 100%;
-    text-align: center;
+    width: auto;
   }
   .hero-scroll-cue {
     display: none;
