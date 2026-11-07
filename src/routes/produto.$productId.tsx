@@ -65,7 +65,7 @@ function ProductPage() {
   if (!product) return null;
 
   const displayDescription = getProductDescription(product);
-  const details = [
+  const details: [string, string][] = [
     ["Descrição", `${displayDescription} Peça de alto padrão com acabamento polido.`],
     ["Materiais e cuidados", "Aço inoxidável cirúrgico com banho nobre de alta durabilidade. Totalmente à prova d'água e de suor. Limpe delicadamente com uma flanela seca para preservar o brilho espelhado."],
     ["Envio e trocas", "Envio segurado com código de rastreamento para todo o Brasil. Garantia incondicional de troca em até 7 dias após o recebimento."],

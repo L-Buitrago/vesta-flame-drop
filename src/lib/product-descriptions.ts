@@ -231,8 +231,9 @@ export function getProductDescription(product: {
   description?: string;
 }): string {
   // 1. Tenta correspondência exata por handle
-  if (product.handle && PRODUCT_DESCRIPTIONS[product.handle]) {
-    return PRODUCT_DESCRIPTIONS[product.handle];
+  const exactMatch = product.handle ? PRODUCT_DESCRIPTIONS[product.handle] : undefined;
+  if (exactMatch) {
+    return exactMatch;
   }
 
   // 2. Se a descrição original do Shopify for de alta qualidade e não for texto técnico bruto
