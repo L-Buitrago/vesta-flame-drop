@@ -70,8 +70,13 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
 
   return (
     <article className={`product-card ${available ? "" : "sold-out"}`}>
-      <Link to="/produto/$productId" params={{ productId: node.handle }}>
-        <div className={`product-image ${validSecondaryNode ? "has-secondary" : ""} ${isContain ? "product-image--contain" : ""}`}>
+      <div className={`product-image ${validSecondaryNode ? "has-secondary" : ""} ${isContain ? "product-image--contain" : ""}`}>
+        <Link
+          to="/produto/$productId"
+          params={{ productId: node.handle }}
+          className="product-image-link"
+          aria-label={`Ver joia ${node.title}`}
+        >
           <span className="product-badge">À prova d'água</span>
           {image && <img src={image.url} alt={image.altText ?? node.title} loading="lazy" width={1024} height={1280} />}
           {validSecondaryNode && (
@@ -85,47 +90,53 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
               height={1280}
             />
           )}
+        </Link>
 
-          {available && (
-            <button
-              type="button"
-              className={`quick-add-btn ${isAdding ? "added" : ""}`}
-              onClick={handleQuickAdd}
-              aria-label={`Adicionar ${node.title} à sacola`}
-              disabled={isAdding || isCartLoading}
-            >
-              {isAdding ? (
-                <>
-                  <Check size={14} />
-                  <span>Adicionado</span>
-                </>
-              ) : isCartLoading ? (
-                <>
-                  <Loader2 size={14} className="animate-spin" />
-                  <span>Adicionando...</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag size={14} />
-                  <span>Adicionar à sacola</span>
-                </>
-              )}
-            </button>
-          )}
-        </div>
+        {available && (
+          <button
+            type="button"
+            className={`quick-add-btn ${isAdding ? "added" : ""}`}
+            onClick={handleQuickAdd}
+            aria-label={`Adicionar ${node.title} à sacola`}
+            disabled={isAdding || isCartLoading}
+          >
+            {isAdding ? (
+              <>
+                <Check size={14} />
+                <span>Adicionado</span>
+              </>
+            ) : isCartLoading ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>Adicionando...</span>
+              </>
+            ) : (
+              <>
+                <ShoppingBag size={14} />
+                <span>Adicionar à sacola</span>
+              </>
+            )}
+          </button>
+        )}
+      </div>
 
-        <div className="product-meta">
-          <div>
+      <div className="product-meta">
+        <div>
+          <Link
+            to="/produto/$productId"
+            params={{ productId: node.handle }}
+            className="product-title-link"
+          >
             <h3>{node.title}</h3>
-            <div>
-              <p>{formatPrice(node.priceRange.minVariantPrice.amount, currency)}</p>
-              <span className="installments">ou 3x de {formatPrice(installment, currency)}</span>
-            </div>
+          </Link>
+          <div>
+            <p>{formatPrice(node.priceRange.minVariantPrice.amount, currency)}</p>
+            <span className="installments">ou 3x de {formatPrice(installment, currency)}</span>
           </div>
-          <span>{available ? "Disponível" : "Esgotado"}</span>
-          <div className="stock-line"><i style={{ width: available ? "100%" : "0%" }} /></div>
         </div>
-      </Link>
+        <span>{available ? "Disponível" : "Esgotado"}</span>
+        <div className="stock-line"><i style={{ width: available ? "100%" : "0%" }} /></div>
+      </div>
     </article>
   );
 }

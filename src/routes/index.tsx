@@ -46,6 +46,12 @@ function Index() {
   useScrollReveal();
 
   useEffect(() => {
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  useEffect(() => {
     const timer = window.setInterval(
       () =>
         setTime((old) => ({
