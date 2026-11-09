@@ -81,8 +81,8 @@ export function AdsConsentProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    if (ready) setMetaPixelPermission(allowed);
-  }, [allowed, ready]);
+    if (ready) setMetaPixelPermission(allowed, record?.choice === "granted");
+  }, [allowed, ready, record?.choice]);
 
   const decide = useCallback(
     (choice: AdsConsentChoice) => {
