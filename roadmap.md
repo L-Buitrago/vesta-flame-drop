@@ -12,7 +12,7 @@
 - [x] Escolher o tipo de campanha: vendas no Facebook e Instagram
 - [x] Escolher direção visual: Rotina sem pausa
 - [x] Preparar e revisar o conjunto final de imagens nos formatos da Meta
-- [ ] Aprovar as imagens finais
-- [ ] Preparar e aprovar imagens finais e textos separadamente
+- [x] Aprovar as imagens finais
+- [ ] Preparar e aprovar os textos dos anúncios separadamente
 - [ ] Verificar medição e prontidão da página de destino
 - [ ] Criar a campanha somente após aprovação exata de verba e publicação
