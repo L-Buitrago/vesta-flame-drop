@@ -17,6 +17,7 @@
 - [x] Implementar, testar e publicar o consentimento regional de privacidade
 - [ ] Configurar e verificar a compra concluída na Shopify — aguardando configuração do usuário
 - [ ] Gerar e revisar as prévias dos anúncios na Meta
-- [ ] Decidir entre campanha de visitas a R$ 15/dia ou aguardar verba suficiente para Vendas
+- [x] Escolher campanha de visitas a R$ 15/dia, sem alterar valores na conta
+- [ ] Escolher entre investigar visualizações da página ou usar cliques no link como resultado da campanha
 - [ ] Aprovar o valor exato somente depois do objetivo final; nunca alterar valores sem aprovação
 - [ ] Criar a campanha pausada somente após as verificações e aprovações

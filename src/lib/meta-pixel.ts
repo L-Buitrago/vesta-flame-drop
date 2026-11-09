@@ -40,11 +40,11 @@ function ensureFbq(): Fbq {
   return fbq;
 }
 
-function requestPixel() {
+function requestPixel(explicitAcceptance: boolean) {
   if (scriptRequested || typeof document === "undefined") return;
   scriptRequested = true;
   const fbq = ensureFbq();
-  if (hasRevoked) fbq("consent", "grant");
+  if (explicitAcceptance || hasRevoked) fbq("consent", "grant");
   if (!initialized) {
     fbq("init", META_PIXEL_ID, {}, { agent: "lovable" });
     initialized = true;
@@ -56,7 +56,7 @@ function requestPixel() {
   document.head.appendChild(script);
 }
 
-export function setMetaPixelPermission(allowed: boolean) {
+export function setMetaPixelPermission(allowed: boolean, explicitAcceptance = false) {
   advertisingAllowed = allowed;
   if (typeof window === "undefined") return;
   if (!allowed) {
@@ -67,7 +67,7 @@ export function setMetaPixelPermission(allowed: boolean) {
     }
     return;
   }
-  requestPixel();
+  requestPixel(explicitAcceptance);
   if (pendingPageView) {
     pendingPageView = false;
     window.fbq?.("track", "PageView");
