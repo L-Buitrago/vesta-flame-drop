@@ -14,5 +14,8 @@
 - [x] Preparar e revisar o conjunto final de imagens nos formatos da Meta
 - [x] Aprovar as imagens finais
 - [x] Preparar e aprovar os textos dos anúncios separadamente: conjuntos 1 e 2
-- [ ] Verificar medição e prontidão da página de destino
-- [ ] Criar a campanha somente após aprovação exata de verba e publicação
+- [x] Implementar, testar e publicar o consentimento regional de privacidade
+- [ ] Configurar e verificar a compra concluída na Shopify — aguardando configuração do usuário
+- [ ] Gerar e revisar as prévias dos anúncios na Meta
+- [ ] Revisar a verba diária frente ao mínimo de R$ 109,69 e aprovar o valor exato
+- [ ] Criar a campanha pausada somente após as verificações e aprovações
