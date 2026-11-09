@@ -52,7 +52,7 @@ function requestPixel() {
   const script = document.createElement("script");
   script.async = true;
   script.src = "https://connect.facebook.net/en_US/fbevents.js";
-  script.dataset.vestaMetaPixel = "true";
+  script.dataset["vestaMetaPixel"] = "true";
   document.head.appendChild(script);
 }
 
