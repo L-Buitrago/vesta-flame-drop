@@ -130,46 +130,60 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   useCartSync();
 
-  useEffect(() => {
-    trackPageView();
-  }, [pathname]);
-
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="site-wrapper">
-        <VestaShell />
-        <div className="site-content">
-          <Outlet />
-        </div>
-        <footer id="rodape" className="footer">
-          <div className="footer-brand">
-            <div className="footer-logo">
-              <span>VESTA</span>
-              <small>JOIAS</small>
-            </div>
-            <p>Joias para atravessar gerações.</p>
-          </div>
-          <div>
-            <h3>Ajuda</h3>
-            <a href="#acesso">Envios e trocas</a>
-            <a href="#acesso">Guia de medidas</a>
-            <a href="#acesso">Cuidados</a>
-          </div>
-          <div>
-            <h3>A Vesta</h3>
-            <a href="#historia">Nossa história</a>
-            <a href="#acesso">Atendimento</a>
-            <a href="#acesso">Instagram</a>
-          </div>
-          <div className="footer-contact">
-            <h3>Contato</h3>
-            <p>contato@vestajewelry.com.br</p>
-            <p>Visa · Mastercard · Pix</p>
-          </div>
-          <p className="copyright">© 2026 VESTA Joias</p>
-        </footer>
-        <Toaster />
-      </div>
+      <AdsConsentProvider>
+        <RootContent pathname={pathname} />
+      </AdsConsentProvider>
     </QueryClientProvider>
+  );
+}
+
+function RootContent({ pathname }: { pathname: string }) {
+  const { ready, allowed } = useAdsConsent();
+
+  useEffect(() => {
+    if (ready && allowed) trackPageView(true);
+  }, [allowed, pathname, ready]);
+
+  return (
+    <div className="site-wrapper">
+      <VestaShell />
+      <div className="site-content">
+        <Outlet />
+      </div>
+      <footer id="rodape" className="footer">
+        <div className="footer-brand">
+          <div className="footer-logo">
+            <span>VESTA</span>
+            <small>JOIAS</small>
+          </div>
+          <p>Joias para atravessar gerações.</p>
+        </div>
+        <div>
+          <h3>Ajuda</h3>
+          <a href="#acesso">Envios e trocas</a>
+          <a href="#acesso">Guia de medidas</a>
+          <a href="#acesso">Cuidados</a>
+        </div>
+        <div>
+          <h3>A Vesta</h3>
+          <a href="#historia">Nossa história</a>
+          <a href="#acesso">Atendimento</a>
+          <a href="#acesso">Instagram</a>
+        </div>
+        <div className="footer-contact">
+          <h3>Contato</h3>
+          <p>contato@vestajewelry.com.br</p>
+          <p>Visa · Mastercard · Pix</p>
+          <Link to="/privacidade">Política de Privacidade</Link>
+          <button type="button" className="footer-privacy-button" onClick={openAdsConsentSettings}>
+            Configurações de cookies
+          </button>
+        </div>
+        <p className="copyright">© 2026 VESTA Joias</p>
+      </footer>
+      <Toaster />
+    </div>
   );
 }
