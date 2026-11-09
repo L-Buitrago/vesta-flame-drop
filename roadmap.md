@@ -19,6 +19,7 @@
 - [ ] Gerar e revisar as prévias dos anúncios na Meta
 - [x] Escolher campanha de visitas a R$ 15/dia, sem alterar valores na conta
 - [x] Escolher cliques no link como resultado da campanha, sem garantir página carregada ou venda
-- [ ] Conferir prévias Meta, prontidão e aprovação exata para criar pausada
+- [ ] Obter aprovação exata para criar campanha de cliques pausada a R$ 15/dia
+- [ ] Antes de ativar: foto da página, duração/end_time e nova aprovação explícita
 - [ ] Aprovar o valor exato somente depois do objetivo final; nunca alterar valores sem aprovação
 - [ ] Criar a campanha pausada somente após as verificações e aprovações
