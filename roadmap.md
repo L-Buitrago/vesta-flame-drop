@@ -13,6 +13,6 @@
 - [x] Escolher direção visual: Rotina sem pausa
 - [x] Preparar e revisar o conjunto final de imagens nos formatos da Meta
 - [x] Aprovar as imagens finais
-- [ ] Preparar e aprovar os textos dos anúncios separadamente
+- [x] Preparar e aprovar os textos dos anúncios separadamente: conjuntos 1 e 2
 - [ ] Verificar medição e prontidão da página de destino
 - [ ] Criar a campanha somente após aprovação exata de verba e publicação
