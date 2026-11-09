@@ -9,7 +9,7 @@
 
 - [x] Definir objetivo, público, região e verba de teste
 - [x] Pesquisar anúncios, páginas de concorrentes e buscas de clientes
-- [ ] Escolher o tipo de campanha
+- [x] Escolher o tipo de campanha: vendas no Facebook e Instagram
 - [ ] Preparar e aprovar imagens e textos
 - [ ] Verificar medição e prontidão da página de destino
 - [ ] Criar a campanha somente após aprovação exata de verba e publicação
