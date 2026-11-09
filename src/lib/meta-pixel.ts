@@ -56,7 +56,7 @@ function requestPixel(explicitAcceptance: boolean) {
   document.head.appendChild(script);
 }
 
-export function setMetaPixelPermission(allowed: boolean) {
+export function setMetaPixelPermission(allowed: boolean, explicitAcceptance = false) {
   advertisingAllowed = allowed;
   if (typeof window === "undefined") return;
   if (!allowed) {
