@@ -7,8 +7,8 @@
 
 # Primeira campanha de anúncios
 
-- [ ] Definir objetivo, público, região e verba de teste
-- [ ] Decidir se haverá pesquisa específica de anúncios concorrentes
+- [x] Definir objetivo, público, região e verba de teste
+- [x] Pesquisar anúncios, páginas de concorrentes e buscas de clientes
 - [ ] Escolher o tipo de campanha
 - [ ] Preparar e aprovar imagens e textos
 - [ ] Verificar medição e prontidão da página de destino
