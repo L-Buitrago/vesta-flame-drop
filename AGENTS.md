@@ -11,3 +11,4 @@
 
 - Fetch the full Shopify catalog through cursor pagination and use the same query in collection, search, and recommendations; a page size must not hide newer products from category filters.
 - Render only real Shopify products; empty catalogs never fall back to generated products.
+- Gate every Meta browser event through the shared advertising-consent provider; explicit refusal and Global Privacy Control must stop transmission immediately.

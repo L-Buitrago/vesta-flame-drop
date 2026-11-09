@@ -206,12 +206,12 @@ export function VestaShell() {
 
   const handleCheckout = () => {
     setIsRedirecting(true);
-    trackInitiateCheckout(count, subtotal, currency);
     let checkoutUrl = getCheckoutUrl();
     if (!checkoutUrl || items.some((i) => !i.lineId || i.lineId.startsWith("local-"))) {
       checkoutUrl = getShopifyCartPermalink(items);
     }
     if (checkoutUrl) {
+      trackInitiateCheckout(count, subtotal, currency);
       window.location.href = checkoutUrl;
       setTimeout(() => setIsRedirecting(false), 6000);
     } else {
