@@ -67,7 +67,7 @@ export function setMetaPixelPermission(allowed: boolean, explicitAcceptance = fa
     }
     return;
   }
-  requestPixel();
+  requestPixel(explicitAcceptance);
   if (pendingPageView) {
     pendingPageView = false;
     window.fbq?.("track", "PageView");
