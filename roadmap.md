@@ -9,17 +9,11 @@
 
 - [x] Definir objetivo, público, região e verba de teste
 - [x] Pesquisar anúncios, páginas de concorrentes e buscas de clientes
-- [x] Escolher o tipo de campanha: vendas no Facebook e Instagram
+- [x] Escolher campanha de visitas no Facebook e Instagram, otimizada por cliques no link
 - [x] Escolher direção visual: Rotina sem pausa
-- [x] Preparar e revisar o conjunto final de imagens nos formatos da Meta
-- [x] Aprovar as imagens finais
-- [x] Preparar e aprovar os textos dos anúncios separadamente: conjuntos 1 e 2
+- [x] Preparar, revisar e aprovar imagens e textos separadamente
 - [x] Implementar, testar e publicar o consentimento regional de privacidade
+- [x] Gerar e revisar prévias de feeds, Stories e Reels na Meta
+- [x] Criar e verificar campanha, público e dois anúncios pausados a R$ 15/dia
 - [ ] Configurar e verificar a compra concluída na Shopify — aguardando configuração do usuário
-- [ ] Gerar e revisar as prévias dos anúncios na Meta
-- [x] Escolher campanha de visitas a R$ 15/dia, sem alterar valores na conta
-- [x] Escolher cliques no link como resultado da campanha, sem garantir página carregada ou venda
-- [ ] Obter aprovação exata para criar campanha de cliques pausada a R$ 15/dia
-- [ ] Antes de ativar: foto da página, duração/end_time e nova aprovação explícita
-- [ ] Aprovar o valor exato somente depois do objetivo final; nunca alterar valores sem aprovação
-- [ ] Criar a campanha pausada somente após as verificações e aprovações
+- [ ] Antes de ativar: foto da página Vesta, duração/end_time e nova aprovação explícita
