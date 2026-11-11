@@ -15,6 +15,6 @@
 - [x] Implementar, testar e publicar o consentimento regional de privacidade
 - [x] Gerar e revisar prévias de feeds, Stories e Reels na Meta
 - [x] Criar e verificar campanha, público e dois anúncios pausados a R$ 15/dia
-- [ ] Corrigir o enquadramento vertical aprovado, revisar prévias e substituir nos dois anúncios pausados
+- [x] Corrigir o enquadramento vertical aprovado, revisar prévias e substituir nos dois anúncios pausados
 - [ ] Configurar e verificar a compra concluída na Shopify — aguardando configuração do usuário
 - [ ] Antes de ativar: foto da página Vesta, duração/end_time e nova aprovação explícita
