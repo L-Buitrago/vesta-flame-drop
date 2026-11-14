@@ -9,6 +9,15 @@ import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
 import heroCoconut from "@/assets/vesta-hero-coconut.jpg";
 import collectionImage from "@/assets/vesta-collection.jpg";
 
+const customerPhotos = [
+  { src: "/clientes/cliente-1.jpg", alt: "Cliente segurando um anel Vesta dourado com zircônias na palma da mão" },
+  { src: "/clientes/cliente-2.jpg", alt: "Cliente usando colar com pingente de borboleta e brinco de argola Vesta" },
+  { src: "/clientes/cliente-3.jpg", alt: "Cliente usando brinco e colar dourados Vesta" },
+  { src: "/clientes/cliente-4.jpg", alt: "Colar Vesta com pingente de serpente sobre a mesa" },
+  { src: "/clientes/cliente-5.jpg", alt: "Dois anéis dourados Vesta sobre a penteadeira" },
+  { src: "/clientes/cliente-6.jpg", alt: "Cliente usando colar dourado Vesta com medalha" },
+];
+
 const productsQuery = queryOptions({
   queryKey: ["shopify-products"],
   queryFn: () => fetchShopifyProducts(),
@@ -206,6 +215,27 @@ function Index() {
             ))}
           </div>
         )}
+      </section>
+
+      <section id="clientes" className="customers reveal" aria-labelledby="clientes-titulo">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">QUEM JÁ USA VESTA</p>
+            <h2 id="clientes-titulo">Nossas clientes</h2>
+          </div>
+          <p>
+            Fotos enviadas por quem comprou
+            <br />
+            No dia a dia, do jeito delas
+          </p>
+        </div>
+        <div className="customers-grid">
+          {customerPhotos.map((photo) => (
+            <figure key={photo.src} className="customer-photo">
+              <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
+            </figure>
+          ))}
+        </div>
       </section>
 
       <section id="historia" className="story reveal">
