@@ -9,12 +9,38 @@ import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
 import heroCoconut from "@/assets/vesta-hero-coconut.jpg";
 import collectionImage from "@/assets/vesta-collection.jpg";
 
-type CustomerReview = { name: string; rating: number; text: string; product: string; handle: string };
+type CustomerReview = { name: string; rating: number; text: string; product?: string; handle?: string };
 
 const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = [
-  { src: "/clientes/cliente-1.jpg", alt: "Cliente segurando um anel Vesta dourado com zircônias na palma da mão" },
-  { src: "/clientes/cliente-2.jpg", alt: "Cliente usando colar com pingente de borboleta e brinco de argola Vesta" },
-  { src: "/clientes/cliente-3.jpg", alt: "Cliente usando brinco e colar dourados Vesta" },
+  {
+    src: "/clientes/cliente-1.jpg",
+    alt: "Cliente segurando um anel Vesta dourado com zircônias na palma da mão",
+    review: {
+      name: "Luciana S.",
+      rating: 5,
+      text: "O anel é lindíssimo e de excelente qualidade",
+    },
+  },
+  {
+    src: "/clientes/cliente-2.jpg",
+    alt: "Cliente usando colar com pingente de borboleta e brinco de argola Vesta",
+    review: {
+      name: "Ana Paula N.",
+      rating: 5,
+      text: "É lindo!",
+      product: "Colar Malha Borboleta Livre",
+      handle: "square-pendants-delicate-stainless-steel-chain-pendant-necklace-for-women-necklace-1",
+    },
+  },
+  {
+    src: "/clientes/cliente-3.jpg",
+    alt: "Cliente usando brinco e colar dourados Vesta",
+    review: {
+      name: "Mayara N.",
+      rating: 5,
+      text: "Tudo certinho conforme anúncio, muito obrigada, mega satisfeita, vou comprar mais",
+    },
+  },
   {
     src: "/clientes/cliente-4.jpg",
     alt: "Colar Vesta com pingente de serpente sobre a mesa",
@@ -26,8 +52,26 @@ const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = 
       handle: "square-pendants-delicate-stainless-steel-chain-pendant-necklace-for-women-necklace-21",
     },
   },
-  { src: "/clientes/cliente-5.jpg", alt: "Dois anéis dourados Vesta sobre a penteadeira" },
-  { src: "/clientes/cliente-6.jpg", alt: "Cliente usando colar dourado Vesta com medalha" },
+  {
+    src: "/clientes/cliente-5.jpg",
+    alt: "Dois anéis dourados Vesta sobre a penteadeira",
+    review: {
+      name: "Elisabete M.",
+      rating: 5,
+      text: "Amei, muito bonito, igual da foto",
+      product: "Anel Aro Triplo Algarismo Romano",
+      handle: "personality-round-beads-ring-band-small-clear-crystal-zircon-waterproof-stainless-steel-gold-rings-simple-granular-fine-jewelry-1",
+    },
+  },
+  {
+    src: "/clientes/cliente-6.jpg",
+    alt: "Cliente usando colar dourado Vesta com medalha",
+    review: {
+      name: "Andréa M.",
+      rating: 5,
+      text: "A peça é linda e tem um acabamento impecável!! Amei ❤️",
+    },
+  },
 ];
 
 const productsQuery = queryOptions({
@@ -327,13 +371,15 @@ function CustomersSection() {
                     <blockquote>“{photo.review.text}”</blockquote>
                     <p>
                       <strong>{photo.review.name}</strong>
-                      <Link
-                        to="/produto/$productId"
-                        params={{ productId: photo.review.handle }}
-                        tabIndex={isCopy ? -1 : undefined}
-                      >
-                        {photo.review.product}
-                      </Link>
+                      {photo.review.product && photo.review.handle && (
+                        <Link
+                          to="/produto/$productId"
+                          params={{ productId: photo.review.handle }}
+                          tabIndex={isCopy ? -1 : undefined}
+                        >
+                          {photo.review.product}
+                        </Link>
+                      )}
                     </p>
                   </figcaption>
                 )}
