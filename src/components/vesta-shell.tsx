@@ -317,7 +317,7 @@ export function VestaShell() {
               </div>
               <div className="crystal-diff-item">
                 <span className="diff-symbol">✦</span>
-                <span>Aço Cirúrgico 316L · Garantia Vitalícia</span>
+                <span>Ouro 18k & Prata Nobre · Garantia Vitalícia</span>
               </div>
               <div className="crystal-diff-item">
                 <span className="diff-symbol">✦</span>

@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "VESTA Joias — Joias em edições limitadas" },
-      { name: "description", content: "Joias brasileiras em ouro 18k e aço 316L resistentes à água." },
+      { name: "description", content: "Joias brasileiras em ouro 18k e prata nobre resistentes à água." },
       { property: "og:title", content: "VESTA Joias — Drop 01 Chama Viva" },
       { property: "og:description", content: "Conheça Chama Viva, a primeira coleção limitada da VESTA." },
       { property: "og:image", content: heroPearls.url },
@@ -128,7 +128,7 @@ function Index() {
             <span className="trust-icon">✦</span>
             <div>
               <strong>Hipoalergênico</strong>
-              <p>Aço cirúrgico 316L e banho nobre livre de níquel</p>
+              <p>Banho nobre em Ouro 18k e Prata, livre de níquel</p>
             </div>
           </div>
           <div className="trust-badge">
@@ -232,7 +232,7 @@ function Index() {
           <br />
           Cada número, uma história que será somente sua.”
         </p>
-        <span>Joias à prova d'água em aço 316L e banho nobre · São Paulo, Brasil</span>
+        <span>Joias à prova d'água em Ouro 18k e Prata · São Paulo, Brasil</span>
       </section>
 
       <section id="acesso" className="early-access reveal">
