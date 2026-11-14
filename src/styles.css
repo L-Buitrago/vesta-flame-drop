@@ -2078,20 +2078,27 @@ a { color: inherit; text-decoration: none; }
 
 
 /* Seção de fotos de clientes */
-.customers { padding:120px 4vw; }
+.customers { padding:120px 4vw; overflow:hidden; }
 .customers .section-heading h2 { margin-top:10px; }
-.customers-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:16px; }
-.customer-photo { margin:0; aspect-ratio:4/5; overflow:hidden; background:var(--secondary); }
+.customers-marquee { margin:0 -4vw; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); }
+.customers-track { display:flex; gap:16px; width:max-content; animation:customers-scroll 40s linear infinite; }
+.customers-marquee:hover .customers-track { animation-play-state:paused; }
+.customer-photo { margin:0; flex:0 0 clamp(200px,19vw,290px); aspect-ratio:4/5; overflow:hidden; background:var(--secondary); }
 .customer-photo img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.2s cubic-bezier(.16,1,.3,1); }
 .customer-photo:hover img { transform:scale(1.03); }
+@keyframes customers-scroll { from { transform:translateX(0); } to { transform:translateX(calc(-50% - 8px)); } }
 @media (max-width: 900px) {
   .customers { padding:80px 5vw; }
-  .customers-grid { grid-template-columns:repeat(3,1fr); gap:10px; }
+  .customers-marquee { margin:0 -5vw; }
+  .customers-track { gap:10px; animation-duration:30s; }
+  .customer-photo { flex-basis:58vw; }
+  @keyframes customers-scroll { from { transform:translateX(0); } to { transform:translateX(calc(-50% - 5px)); } }
 }
 @media (max-width: 600px) {
   .customers .section-heading { flex-direction:column; align-items:flex-start; gap:14px; }
   .customers .section-heading>p { text-align:left; }
-  .customers-grid { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:10px; scrollbar-width:none; }
-  .customers-grid::-webkit-scrollbar { display:none; }
-  .customer-photo { flex:0 0 68%; scroll-snap-align:start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .customers-marquee { overflow-x:auto; }
+  .customers-track { animation:none; }
 }

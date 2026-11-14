@@ -229,12 +229,17 @@ function Index() {
             No dia a dia, do jeito delas
           </p>
         </div>
-        <div className="customers-grid">
-          {customerPhotos.map((photo) => (
-            <figure key={photo.src} className="customer-photo">
-              <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
-            </figure>
-          ))}
+        <div className="customers-marquee">
+          <div className="customers-track">
+            {[...customerPhotos, ...customerPhotos].map((photo, index) => {
+              const isCopy = index >= customerPhotos.length;
+              return (
+                <figure key={`${photo.src}-${index}`} className="customer-photo" aria-hidden={isCopy || undefined}>
+                  <img src={photo.src} alt={isCopy ? "" : photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
+                </figure>
+              );
+            })}
+          </div>
         </div>
       </section>
 
