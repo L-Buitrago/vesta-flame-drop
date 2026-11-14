@@ -464,10 +464,7 @@ export function VestaShell() {
               </Button>
             </div>
             <div className="shipping-progress">
-              <p>{subtotal >= 300 ? "Você ganhou frete grátis!" : `Faltam ${formatPrice(300 - subtotal, currency)} para o frete grátis`}</p>
-              <div>
-                <span style={{ width: `${Math.min(100, subtotal / 3)}%` }} />
-              </div>
+              <p>Frete grátis para todo o Brasil</p>
             </div>
             <div className="cart-items">
               {items.length === 0 ? (
@@ -504,7 +501,7 @@ export function VestaShell() {
                 <span>Subtotal</span>
                 <strong>{formatPrice(subtotal, currency)}</strong>
               </div>
-              <p>Frete e cupons calculados no checkout oficial.</p>
+              <p>Frete grátis · Cupons aplicados no checkout oficial.</p>
               <Button
                 className="vesta-button w-full"
                 disabled={!items.length || isRedirecting}
