@@ -85,6 +85,12 @@ function Index() {
     return getProductCategory(p) === categoria;
   });
 
+  // Fotos de clientes no meio da vitrine (múltiplo de 4 para não quebrar a linha da grade)
+  const showCustomersInGrid = filteredProducts.length >= 16;
+  const customersBreak = showCustomersInGrid
+    ? Math.round(filteredProducts.length / 2 / 4) * 4
+    : filteredProducts.length;
+
   return (
     <main>
       <section className="hero">
@@ -206,42 +212,30 @@ function Index() {
             </a>
           </div>
         ) : (
-          <div
-            key={categoria ?? "todos"}
-            className={`product-grid count-${Math.min(filteredProducts.length, 4)}`}
-          >
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.node.id} product={product} />
-            ))}
-          </div>
+          <>
+            <div
+              key={categoria ?? "todos"}
+              className={`product-grid count-${Math.min(filteredProducts.length, 4)}`}
+            >
+              {filteredProducts.slice(0, customersBreak).map((product) => (
+                <ProductCard key={product.node.id} product={product} />
+              ))}
+            </div>
+            {showCustomersInGrid && (
+              <>
+                <CustomersSection />
+                <div className={`product-grid count-${Math.min(filteredProducts.length - customersBreak, 4)}`}>
+                  {filteredProducts.slice(customersBreak).map((product) => (
+                    <ProductCard key={product.node.id} product={product} />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         )}
       </section>
 
-      <section id="clientes" className="customers reveal" aria-labelledby="clientes-titulo">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">QUEM JÁ USA VESTA</p>
-            <h2 id="clientes-titulo">Nossas clientes</h2>
-          </div>
-          <p>
-            Fotos enviadas por quem comprou
-            <br />
-            No dia a dia, do jeito delas
-          </p>
-        </div>
-        <div className="customers-marquee">
-          <div className="customers-track">
-            {[...customerPhotos, ...customerPhotos].map((photo, index) => {
-              const isCopy = index >= customerPhotos.length;
-              return (
-                <figure key={`${photo.src}-${index}`} className="customer-photo" aria-hidden={isCopy || undefined}>
-                  <img src={photo.src} alt={isCopy ? "" : photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
-                </figure>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {!showCustomersInGrid && <CustomersSection />}
 
       <section id="historia" className="story reveal">
         <div className="story-image">
@@ -289,5 +283,35 @@ function Index() {
         <p>Ao se inscrever, você concorda com nossa Política de Privacidade.</p>
       </section>
     </main>
+  );
+}
+
+function CustomersSection() {
+  return (
+    <section id="clientes" className="customers" aria-labelledby="clientes-titulo">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">QUEM JÁ USA VESTA</p>
+          <h2 id="clientes-titulo">Nossas clientes</h2>
+        </div>
+        <p>
+          Fotos enviadas por quem comprou
+          <br />
+          No dia a dia, do jeito delas
+        </p>
+      </div>
+      <div className="customers-marquee">
+        <div className="customers-track">
+          {[...customerPhotos, ...customerPhotos].map((photo, index) => {
+            const isCopy = index >= customerPhotos.length;
+            return (
+              <figure key={`${photo.src}-${index}`} className="customer-photo" aria-hidden={isCopy || undefined}>
+                <img src={photo.src} alt={isCopy ? "" : photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
+              </figure>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
