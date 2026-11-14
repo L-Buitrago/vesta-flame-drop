@@ -9,11 +9,23 @@ import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
 import heroCoconut from "@/assets/vesta-hero-coconut.jpg";
 import collectionImage from "@/assets/vesta-collection.jpg";
 
-const customerPhotos = [
+type CustomerReview = { name: string; rating: number; text: string; product: string; handle: string };
+
+const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = [
   { src: "/clientes/cliente-1.jpg", alt: "Cliente segurando um anel Vesta dourado com zircônias na palma da mão" },
   { src: "/clientes/cliente-2.jpg", alt: "Cliente usando colar com pingente de borboleta e brinco de argola Vesta" },
   { src: "/clientes/cliente-3.jpg", alt: "Cliente usando brinco e colar dourados Vesta" },
-  { src: "/clientes/cliente-4.jpg", alt: "Colar Vesta com pingente de serpente sobre a mesa" },
+  {
+    src: "/clientes/cliente-4.jpg",
+    alt: "Colar Vesta com pingente de serpente sobre a mesa",
+    review: {
+      name: "Edna P.",
+      rating: 5,
+      text: "Amei meus produtos, comprei e vou comprar mais!!",
+      product: "Colar Serpente Pingente",
+      handle: "square-pendants-delicate-stainless-steel-chain-pendant-necklace-for-women-necklace-21",
+    },
+  },
   { src: "/clientes/cliente-5.jpg", alt: "Dois anéis dourados Vesta sobre a penteadeira" },
   { src: "/clientes/cliente-6.jpg", alt: "Cliente usando colar dourado Vesta com medalha" },
 ];
@@ -307,6 +319,24 @@ function CustomersSection() {
             return (
               <figure key={`${photo.src}-${index}`} className="customer-photo" aria-hidden={isCopy || undefined}>
                 <img src={photo.src} alt={isCopy ? "" : photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
+                {photo.review && (
+                  <figcaption className="customer-review">
+                    <span className="customer-review-stars" aria-label={`${photo.review.rating} de 5 estrelas`}>
+                      {"★".repeat(photo.review.rating)}
+                    </span>
+                    <blockquote>“{photo.review.text}”</blockquote>
+                    <p>
+                      <strong>{photo.review.name}</strong>
+                      <Link
+                        to="/produto/$productId"
+                        params={{ productId: photo.review.handle }}
+                        tabIndex={isCopy ? -1 : undefined}
+                      >
+                        {photo.review.product}
+                      </Link>
+                    </p>
+                  </figcaption>
+                )}
               </figure>
             );
           })}
