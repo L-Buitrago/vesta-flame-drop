@@ -38,7 +38,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [time, setTime] = useState({ days: 6, hours: 12, minutes: 44, seconds: 18 });
   const [activeHero, setActiveHero] = useState(0);
   const { categoria = "todos" } = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -49,19 +48,6 @@ function Index() {
     if (!window.location.hash) {
       window.scrollTo(0, 0);
     }
-  }, []);
-
-  useEffect(() => {
-    const timer = window.setInterval(
-      () =>
-        setTime((old) => ({
-          ...old,
-          seconds: old.seconds > 0 ? old.seconds - 1 : 59,
-          minutes: old.seconds > 0 ? old.minutes : Math.max(0, old.minutes - 1),
-        })),
-      1000,
-    );
-    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -113,20 +99,12 @@ function Index() {
           <p className="eyebrow">DROP 01</p>
           <h1>Chama Viva</h1>
           <p>Edição limitada · Joias à prova d'água que não escurecem</p>
-          <div className="countdown" aria-label="Contagem regressiva">
-            {Object.entries(time).map(([label, value]) => (
-              <div key={label}>
-                <strong>{String(value).padStart(2, "0")}</strong>
-                <span>{{ days: "dias", hours: "horas", minutes: "minutos", seconds: "segundos" }[label]}</span>
-              </div>
-            ))}
-          </div>
           <div className="hero-actions">
             <a href="#drop-01" className="line-link light">
               Ver Coleção
             </a>
             <a href="#acesso" className="line-link light">
-              Lista VIP
+              Avise-me das novidades
             </a>
           </div>
         </div>
@@ -215,7 +193,7 @@ function Index() {
             <h3>Próximo Lote Exclusivo</h3>
             <p>Nenhuma joia disponível para pronta entrega nesta categoria no momento.</p>
             <a href="#acesso" className="empty-catalog-vip-link">
-              Próximo Lote Exclusivo — Cadastre-se na Lista VIP →
+              Receba um aviso quando chegarem novas joias →
             </a>
           </div>
         ) : (
@@ -258,11 +236,11 @@ function Index() {
       </section>
 
       <section id="acesso" className="early-access reveal">
-        <p className="eyebrow">ACESSO ANTECIPADO</p>
+        <p className="eyebrow">NOVIDADES VESTA</p>
         <h2>
-          Seja a primeira a saber
+          Seja avisada quando
           <br />
-          do próximo drop.
+          chegarem novas joias.
         </h2>
         <form onSubmit={(e) => e.preventDefault()}>
           <label className="sr-only" htmlFor="email">

@@ -325,7 +325,7 @@ export function VestaShell() {
               </div>
             </div>
             <a href="#acesso" className="crystal-vip-button" onClick={closeMenu}>
-              <span>Lista VIP · Próximo Drop</span>
+              <span>Avise-me das novidades</span>
               <span className="vip-arrow">→</span>
             </a>
           </div>
