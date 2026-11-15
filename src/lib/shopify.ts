@@ -230,6 +230,16 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   return (data?.data?.product as ShopifyProduct["node"] | null) ?? null;
 }
 
+export function getShopifyImageUrl(url: string, width: number): string {
+  try {
+    const imageUrl = new URL(url);
+    imageUrl.searchParams.set("width", String(width));
+    return imageUrl.toString();
+  } catch {
+    return url;
+  }
+}
+
 export const formatPrice = (amount: string | number, currencyCode = "BRL") =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: currencyCode }).format(
     typeof amount === "string" ? parseFloat(amount) : amount,

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { formatPrice, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
+import { formatPrice, getShopifyImageUrl, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
 import { ShoppingBag, Loader2, Check } from "lucide-react";
@@ -85,13 +85,26 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
           aria-label={`Ver joia ${node.title}`}
         >
           <span className="product-badge">À prova d'água</span>
-          {image && <img src={image.url} alt={image.altText ?? node.title} loading="lazy" width={1024} height={1280} />}
+          {image && (
+            <img
+              src={getShopifyImageUrl(image.url, 600)}
+              srcSet={`${getShopifyImageUrl(image.url, 360)} 360w, ${getShopifyImageUrl(image.url, 600)} 600w`}
+              sizes="(max-width: 767px) 50vw, 25vw"
+              alt={image.altText ?? node.title}
+              loading="lazy"
+              decoding="async"
+              width={1024}
+              height={1280}
+            />
+          )}
           {validSecondaryNode && (
             <img
               className="secondary"
-              src={validSecondaryNode.url}
+              src={getShopifyImageUrl(validSecondaryNode.url, 600)}
+              srcSet={`${getShopifyImageUrl(validSecondaryNode.url, 360)} 360w, ${getShopifyImageUrl(validSecondaryNode.url, 600)} 600w`}
+              sizes="(max-width: 767px) 50vw, 25vw"
               alt={validSecondaryNode.altText ?? node.title}
-              loading="eager"
+              loading="lazy"
               decoding="async"
               width={1024}
               height={1280}

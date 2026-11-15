@@ -4,7 +4,7 @@ import { Menu, Search, ShoppingBag, UserRound, X, Minus, Plus, Loader2, ShieldCh
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
-import { fetchShopifyProducts, formatPrice, getShopifyCartPermalink, getProductCategory, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
+import { fetchShopifyProducts, formatPrice, getShopifyCartPermalink, getShopifyImageUrl, getProductCategory, isContainFitProduct, type ShopifyProduct } from "@/lib/shopify";
 import { trackInitiateCheckout } from "@/lib/meta-pixel";
 
 const navItems = [
@@ -426,7 +426,7 @@ export function VestaShell() {
                       >
                         <div className={`search-card-thumb ${isContainFitProduct(product.node.handle, product.node.title) ? "search-card-thumb--contain" : ""}`}>
                           {imageUrl ? (
-                            <img src={imageUrl} alt={product.node.title} loading="lazy" />
+                            <img src={getShopifyImageUrl(imageUrl, 240)} alt={product.node.title} loading="lazy" decoding="async" width={240} height={300} />
                           ) : (
                             <div className="search-card-thumb-placeholder" />
                           )}
@@ -473,7 +473,14 @@ export function VestaShell() {
                 items.map((item) => (
                   <article className="cart-item" key={item.variantId}>
                     {item.product.node.images.edges[0]?.node && (
-                      <img src={item.product.node.images.edges[0].node.url} alt={item.product.node.title} />
+                      <img
+                        src={getShopifyImageUrl(item.product.node.images.edges[0].node.url, 160)}
+                        alt={item.product.node.title}
+                        loading="lazy"
+                        decoding="async"
+                        width={160}
+                        height={200}
+                      />
                     )}
                     <div>
                       <h3>{item.product.node.title}</h3>

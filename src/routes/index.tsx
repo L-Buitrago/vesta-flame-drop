@@ -5,15 +5,13 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { fetchShopifyProducts, getProductCategory } from "@/lib/shopify";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import heroPearls from "@/assets/vesta-hero-pearls.png.asset.json";
-import heroCoconut from "@/assets/vesta-hero-coconut.jpg";
-import collectionImage from "@/assets/vesta-collection.jpg";
+import { collectionImage, customerImages, heroCoconut, heroPearls, responsiveSrcSet, type ResponsiveImage } from "@/lib/home-images";
 
 type CustomerReview = { name: string; rating: number; text: string; product?: string; handle?: string };
 
-const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = [
+const customerPhotos: { image: ResponsiveImage; alt: string; review?: CustomerReview }[] = [
   {
-    src: "/clientes/cliente-1.jpg",
+    image: customerImages[0],
     alt: "Cliente segurando um anel Vesta dourado com zircônias na palma da mão",
     review: {
       name: "Luciana S.",
@@ -22,7 +20,7 @@ const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = 
     },
   },
   {
-    src: "/clientes/cliente-2.jpg",
+    image: customerImages[1],
     alt: "Cliente usando colar com pingente de borboleta e brinco de argola Vesta",
     review: {
       name: "Ana Paula N.",
@@ -33,7 +31,7 @@ const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = 
     },
   },
   {
-    src: "/clientes/cliente-3.jpg",
+    image: customerImages[2],
     alt: "Cliente usando brinco e colar dourados Vesta",
     review: {
       name: "Mayara N.",
@@ -42,7 +40,7 @@ const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = 
     },
   },
   {
-    src: "/clientes/cliente-4.jpg",
+    image: customerImages[3],
     alt: "Colar Vesta com pingente de serpente sobre a mesa",
     review: {
       name: "Edna P.",
@@ -53,7 +51,7 @@ const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = 
     },
   },
   {
-    src: "/clientes/cliente-5.jpg",
+    image: customerImages[4],
     alt: "Dois anéis dourados Vesta sobre a penteadeira",
     review: {
       name: "Elisabete M.",
@@ -64,7 +62,7 @@ const customerPhotos: { src: string; alt: string; review?: CustomerReview }[] = 
     },
   },
   {
-    src: "/clientes/cliente-6.jpg",
+    image: customerImages[5],
     alt: "Cliente usando colar dourado Vesta com medalha",
     review: {
       name: "Andréa M.",
@@ -93,8 +91,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Joias brasileiras em ouro 18k e prata nobre resistentes à água." },
       { property: "og:title", content: "VESTA Joias — Drop 01 Chama Viva" },
       { property: "og:description", content: "Conheça Chama Viva, a primeira coleção limitada da VESTA." },
-      { property: "og:image", content: heroPearls.url },
-      { name: "twitter:image", content: heroPearls.url },
+      { property: "og:image", content: heroPearls.desktop.url },
+      { name: "twitter:image", content: heroPearls.desktop.url },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -152,15 +150,20 @@ function Index() {
       <section className="hero">
         <div className="hero-carousel">
           {[
-            { src: heroPearls.url, alt: "Colares de ouro e pulseira de pérolas Vesta sobre a grade à beira-mar ao entardecer", width: 1672, height: 941 },
-            { src: heroCoconut, alt: "Brincos de pérola Vesta dentro de coco à beira da piscina", width: 1024, height: 576 },
+            { image: heroPearls, alt: "Colares de ouro e pulseira de pérolas Vesta sobre a grade à beira-mar ao entardecer" },
+            { image: heroCoconut, alt: "Brincos de pérola Vesta dentro de coco à beira da piscina" },
           ].map((slide, index) => (
             <img
-              key={slide.src}
-              src={slide.src}
+              key={slide.image.desktop.url}
+              src={slide.image.desktop.url}
+              srcSet={responsiveSrcSet(slide.image)}
+              sizes="100vw"
               alt={slide.alt}
-              width={slide.width}
-              height={slide.height}
+              width={slide.image.width}
+              height={slide.image.height}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={index === 0 ? "high" : "auto"}
               className={index === activeHero ? "active" : ""}
             />
           ))}
@@ -295,7 +298,16 @@ function Index() {
 
       <section id="historia" className="story reveal">
         <div className="story-image">
-          <img src={collectionImage} alt="Coleção Vesta em ouro 18k" loading="lazy" width={819} height={1024} />
+          <img
+            src={collectionImage.desktop.url}
+            srcSet={responsiveSrcSet(collectionImage)}
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="Coleção Vesta em ouro 18k"
+            loading="lazy"
+            decoding="async"
+            width={collectionImage.width}
+            height={collectionImage.height}
+          />
         </div>
         <div className="story-copy">
           <p className="eyebrow">A NOSSA ORIGEM</p>
@@ -361,8 +373,17 @@ function CustomersSection() {
           {[...customerPhotos, ...customerPhotos].map((photo, index) => {
             const isCopy = index >= customerPhotos.length;
             return (
-              <figure key={`${photo.src}-${index}`} className="customer-photo" aria-hidden={isCopy || undefined}>
-                <img src={photo.src} alt={isCopy ? "" : photo.alt} loading="lazy" decoding="async" width={825} height={1024} />
+              <figure key={`${photo.image.desktop.url}-${index}`} className="customer-photo" aria-hidden={isCopy || undefined}>
+                <img
+                  src={photo.image.desktop.url}
+                  srcSet={responsiveSrcSet(photo.image)}
+                  sizes="(max-width: 767px) 75vw, 25vw"
+                  alt={isCopy ? "" : photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={photo.image.width}
+                  height={photo.image.height}
+                />
                 {photo.review && (
                   <figcaption className="customer-review">
                     <span className="customer-review-stars" aria-label={`${photo.review.rating} de 5 estrelas`}>

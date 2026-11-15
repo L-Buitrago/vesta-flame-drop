@@ -5,6 +5,14 @@
 - [x] Verificar visitas, páginas publicadas, busca orgânica e caminho de compra
 - [x] Salvar achados concretos e apresentar plano priorizado
 
+# Performance da home
+
+- [x] Medir o peso inicial atual da home
+- [x] Gerar imagens WebP responsivas sem alterar o visual
+- [x] Priorizar somente a primeira imagem da hero e adiar as demais
+- [x] Reduzir imagens de produtos Shopify conforme o tamanho exibido
+- [x] Validar a home e medir o peso final
+
 # Primeira campanha de anúncios
 
 - [x] Definir objetivo, público, região e verba de teste
