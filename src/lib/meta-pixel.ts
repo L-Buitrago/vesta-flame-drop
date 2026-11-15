@@ -1,4 +1,4 @@
-export const META_PIXEL_ID = "2262829127982880";
+export const META_PIXEL_IDS = ["2262829127982880", "1874666087280798"];
 
 type Fbq = {
   (...args: unknown[]): void;
@@ -46,7 +46,9 @@ function requestPixel(explicitAcceptance: boolean) {
   const fbq = ensureFbq();
   if (explicitAcceptance || hasRevoked) fbq("consent", "grant");
   if (!initialized) {
-    fbq("init", META_PIXEL_ID, {}, { agent: "lovable" });
+    for (const id of META_PIXEL_IDS) {
+      fbq("init", id, {}, { agent: "lovable" });
+    }
     initialized = true;
   }
   const script = document.createElement("script");
