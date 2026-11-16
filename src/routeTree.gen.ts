@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as TrocasEEnviosRouteImport } from './routes/trocas-e-envios'
 import { Route as ProdutoProductIdRouteImport } from './routes/produto.$productId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrocasEEnviosRoute = TrocasEEnviosRouteImport.update({
+  id: '/trocas-e-envios',
+  path: '/trocas-e-envios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdutoProductIdRoute = ProdutoProductIdRouteImport.update({
   id: '/produto/$productId',
   path: '/produto/$productId',
@@ -32,30 +38,39 @@ const ProdutoProductIdRoute = ProdutoProductIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/trocas-e-envios': typeof TrocasEEnviosRoute
   '/produto/$productId': typeof ProdutoProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/trocas-e-envios': typeof TrocasEEnviosRoute
   '/produto/$productId': typeof ProdutoProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/trocas-e-envios': typeof TrocasEEnviosRoute
   '/produto/$productId': typeof ProdutoProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/privacidade' | '/produto/$productId'
+  fullPaths: '/' | '/privacidade' | '/trocas-e-envios' | '/produto/$productId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/privacidade' | '/produto/$productId'
-  id: '__root__' | '/' | '/privacidade' | '/produto/$productId'
+  to: '/' | '/privacidade' | '/trocas-e-envios' | '/produto/$productId'
+  id:
+    | '__root__'
+    | '/'
+    | '/privacidade'
+    | '/trocas-e-envios'
+    | '/produto/$productId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
+  TrocasEEnviosRoute: typeof TrocasEEnviosRoute
   ProdutoProductIdRoute: typeof ProdutoProductIdRoute
 }
 
@@ -75,6 +90,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trocas-e-envios': {
+      id: '/trocas-e-envios'
+      path: '/trocas-e-envios'
+      fullPath: '/trocas-e-envios'
+      preLoaderRoute: typeof TrocasEEnviosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produto/$productId': {
       id: '/produto/$productId'
       path: '/produto/$productId'
@@ -88,6 +110,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivacidadeRoute: PrivacidadeRoute,
+  TrocasEEnviosRoute: TrocasEEnviosRoute,
   ProdutoProductIdRoute: ProdutoProductIdRoute,
 }
 export const routeTree = rootRouteImport

@@ -5,72 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { fetchShopifyProducts, getProductCategory } from "@/lib/shopify";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { collectionImage, customerImages, heroCoconut, heroPearls, responsiveSrcSet, type ResponsiveImage } from "@/lib/home-images";
-
-type CustomerReview = { name: string; rating: number; text: string; product?: string; handle?: string };
-
-const customerPhotos: { image: ResponsiveImage; alt: string; review?: CustomerReview }[] = [
-  {
-    image: customerImages[0],
-    alt: "Cliente segurando um anel Vesta dourado com zircônias na palma da mão",
-    review: {
-      name: "Luciana S.",
-      rating: 5,
-      text: "O anel é lindíssimo e de excelente qualidade",
-    },
-  },
-  {
-    image: customerImages[1],
-    alt: "Cliente usando colar com pingente de borboleta e brinco de argola Vesta",
-    review: {
-      name: "Ana Paula N.",
-      rating: 5,
-      text: "É lindo!",
-      product: "Colar Malha Borboleta Livre",
-      handle: "square-pendants-delicate-stainless-steel-chain-pendant-necklace-for-women-necklace-1",
-    },
-  },
-  {
-    image: customerImages[2],
-    alt: "Cliente usando brinco e colar dourados Vesta",
-    review: {
-      name: "Mayara N.",
-      rating: 5,
-      text: "Tudo certinho conforme anúncio, muito obrigada, mega satisfeita, vou comprar mais",
-    },
-  },
-  {
-    image: customerImages[3],
-    alt: "Colar Vesta com pingente de serpente sobre a mesa",
-    review: {
-      name: "Edna P.",
-      rating: 5,
-      text: "Amei meus produtos, comprei e vou comprar mais!!",
-      product: "Colar Serpente Pingente",
-      handle: "square-pendants-delicate-stainless-steel-chain-pendant-necklace-for-women-necklace-21",
-    },
-  },
-  {
-    image: customerImages[4],
-    alt: "Dois anéis dourados Vesta sobre a penteadeira",
-    review: {
-      name: "Elisabete M.",
-      rating: 5,
-      text: "Amei, muito bonito, igual da foto",
-      product: "Anel Aro Triplo Algarismo Romano",
-      handle: "personality-round-beads-ring-band-small-clear-crystal-zircon-waterproof-stainless-steel-gold-rings-simple-granular-fine-jewelry-1",
-    },
-  },
-  {
-    image: customerImages[5],
-    alt: "Cliente usando colar dourado Vesta com medalha",
-    review: {
-      name: "Andréa M.",
-      rating: 5,
-      text: "A peça é linda e tem um acabamento impecável!! Amei ❤️",
-    },
-  },
-];
+import { collectionImage, heroCoconut, heroPearls, responsiveSrcSet } from "@/lib/home-images";
+import { customerPhotos } from "@/lib/customer-reviews";
 
 const productsQuery = queryOptions({
   queryKey: ["shopify-products"],
@@ -170,15 +106,12 @@ function Index() {
         </div>
         <div className="hero-shade" />
         <div className="hero-copy">
-          <p className="eyebrow">DROP 01</p>
-          <h1>Chama Viva</h1>
-          <p>Edição limitada · Joias à prova d'água que não escurecem</p>
+          <p className="eyebrow">À PROVA D'ÁGUA</p>
+          <h1>Joias que podem molhar</h1>
+          <p>Banho, mar e piscina sem escurecer · Frete grátis · até 12x · troca em 7 dias</p>
           <div className="hero-actions">
-            <a href="#drop-01" className="line-link light">
-              Ver Coleção
-            </a>
-            <a href="#acesso" className="line-link light">
-              Avise-me das novidades
+            <a href="#drop-01" className="hero-primary-btn">
+              VER JOIAS
             </a>
           </div>
         </div>
@@ -233,7 +166,7 @@ function Index() {
           <p>
             {filteredProducts.length} {filteredProducts.length === 1 ? "joia disponível" : "joias disponíveis"}
             <br />
-            Envio imediato
+            Frete grátis · Entrega em 2 a 3 semanas
           </p>
         </div>
 

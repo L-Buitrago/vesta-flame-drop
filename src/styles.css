@@ -328,36 +328,27 @@ a { color: inherit; text-decoration: none; }
 .countdown { display:flex; gap:36px; margin:28px 0 34px; }
 .countdown div { display:flex; flex-direction:column; min-width:48px; position:relative; }
 .countdown div:not(:last-child)::after { content:"·"; position:absolute; right:-20px; top:0; font-size:24px; color:var(--accent); opacity:.8; line-height:1; }
-.hero-actions { display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+.hero-actions { display:flex; align-items:center; gap:28px; flex-wrap:wrap; margin-top:26px; }
 .hero-primary-btn {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 30px;
+  border: 1px solid var(--background);
+  background: var(--background);
+  color: var(--foreground);
   font-size: 10px;
   letter-spacing: .2em;
   text-transform: uppercase;
-  font-weight: 500;
-  color: #ffffff !important;
+  font-weight: 700;
   text-decoration: none;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  transition: opacity .3s ease;
+  box-shadow: 0 8px 28px color-mix(in oklab, var(--foreground) 18%, transparent);
+  transition: background .3s ease, transform .3s ease;
 }
-.hero-primary-btn:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  background: #ffffff;
-  transform-origin: left;
-  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
-}
-.hero-primary-btn:hover:after {
-  transform: scaleX(.25);
+.hero-primary-btn:hover {
+  background: color-mix(in oklab, var(--background) 90%, var(--accent));
+  transform: translateY(-2px);
 }
 .hero-scroll-cue {
   position: absolute;
@@ -1519,6 +1510,17 @@ a { color: inherit; text-decoration: none; }
 }
 .sizes button:disabled { opacity:.4; cursor:not-allowed; text-decoration:line-through; }
 .add-button { width:100%; margin-bottom:22px; }
+.pdp-delivery-note { margin:-4px 0 18px; color:var(--muted-foreground); font-size:11px; line-height:1.65; }
+.mobile-add-bar { display:none; }
+.pdp-customer-reviews { margin-top:30px; }
+.pdp-customer-reviews h2 { margin:0 0 16px; font:500 25px/1.2 var(--font-serif); }
+.pdp-reviews-track { display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; scroll-snap-type:x proximity; scrollbar-width:thin; }
+.pdp-review-card { flex:0 0 250px; display:grid; grid-template-columns:58px minmax(0,1fr); gap:12px; margin:0; padding:12px; background:var(--secondary); scroll-snap-align:start; }
+.pdp-review-card img { width:58px; height:74px; object-fit:cover; }
+.pdp-review-card figcaption { min-width:0; }
+.pdp-review-stars { display:block; margin-bottom:5px; color:var(--accent); font-size:10px; letter-spacing:.12em; }
+.pdp-review-card blockquote { margin:0 0 7px; font:italic 400 14px/1.35 var(--font-serif); }
+.pdp-review-card figcaption>strong { font-size:8px; letter-spacing:.14em; text-transform:uppercase; }
 /* ── PDP Product Accordions ── */
 .product-accordions {
   margin-top: 32px;
@@ -2024,6 +2026,7 @@ a { color: inherit; text-decoration: none; }
   border:1px solid var(--accent);
 }
 .privacy-banner-copy { flex:1; }
+.privacy-banner-summary { display:none; }
 .privacy-banner-copy strong { font:600 22px/1.2 var(--font-serif); }
 .privacy-banner-copy p { margin:10px 0 0; font-size:12px; line-height:1.7; color:var(--muted-foreground); }
 .privacy-banner-copy a, .privacy-page a { color:var(--foreground); text-underline-offset:3px; }
@@ -2069,11 +2072,46 @@ a { color: inherit; text-decoration: none; }
   cursor:pointer;
 }
 
-@media (max-width:640px) {
-  .privacy-banner { bottom:12px; flex-direction:column; align-items:stretch; gap:18px; padding:20px; }
-  .privacy-banner-actions { width:100%; }
-  .privacy-button { flex:1; min-width:0; }
+@media (max-width:767px) {
+  .privacy-banner {
+    left:0;
+    bottom:0;
+    transform:none;
+    width:100%;
+    max-height:calc(96px + env(safe-area-inset-bottom));
+    flex-direction:column;
+    align-items:stretch;
+    gap:8px;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    border-width:1px 0 0;
+  }
+  .privacy-banner-copy strong,
+  .privacy-banner-details,
+  .privacy-banner-gpc { display:none; }
+  .privacy-banner-summary { display:block; margin:0; font-size:10.5px; line-height:1.3; }
+  .privacy-banner-actions { width:100%; flex-direction:row; gap:8px; }
+  .privacy-button { flex:1; min-width:0; min-height:34px; padding:8px 12px; font-size:9px; }
   .privacy-page { padding:130px 22px 80px; }
+  .hero { height:70svh; height:70dvh; min-height:480px; }
+  .hero-copy { bottom:112px; }
+  .mobile-add-bar.visible {
+    position:fixed;
+    z-index:60;
+    left:0;
+    right:0;
+    bottom:0;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    background:var(--card);
+    color:var(--card-foreground);
+    border-top:1px solid var(--accent);
+    box-shadow:0 -8px 24px color-mix(in oklab, var(--foreground) 10%, transparent);
+  }
+  .site-wrapper:has(.privacy-banner) .mobile-add-bar { bottom:96px; }
+  .mobile-add-bar>strong { flex:1; font-size:14px; white-space:nowrap; }
+  .mobile-add-bar .vesta-button { width:auto; min-height:44px; margin:0; padding:0 16px; font-size:9px; }
 }
 
 

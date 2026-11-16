@@ -162,19 +162,19 @@ function RootContent({ pathname }: { pathname: string }) {
         </div>
         <div>
           <h3>Ajuda</h3>
-          <a href="#acesso">Envios e trocas</a>
+          <Link to="/trocas-e-envios">Envios e trocas</Link>
           <a href="#acesso">Guia de medidas</a>
           <a href="#acesso">Cuidados</a>
         </div>
         <div>
           <h3>A Vesta</h3>
           <a href="#historia">Nossa história</a>
-          <a href="#acesso">Atendimento</a>
+          <a href="mailto:vestajoiasltda@gmail.com">Atendimento</a>
           <a href="#acesso">Instagram</a>
         </div>
         <div className="footer-contact">
           <h3>Contato</h3>
-          <p>contato@vestajewelry.com.br</p>
+          <a href="mailto:vestajoiasltda@gmail.com">vestajoiasltda@gmail.com</a>
           <p>Visa · Mastercard · Pix</p>
           <Link to="/privacidade">Política de Privacidade</Link>
           <button type="button" className="footer-privacy-button" onClick={openAdsConsentSettings}>

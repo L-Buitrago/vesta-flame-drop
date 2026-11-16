@@ -110,12 +110,15 @@ export function AdsConsentProvider({ children }: { children: ReactNode }) {
         <aside className="privacy-banner" aria-label="Privacidade e cookies">
           <div className="privacy-banner-copy">
             <strong>Sua privacidade, sua escolha</strong>
-            <p>
+            <p className="privacy-banner-summary">
+              Usamos cookies para medir anúncios. <Link to="/privacidade">Política de Privacidade</Link>
+            </p>
+            <p className="privacy-banner-details">
               Usamos cookies da Meta para medir e melhorar nossos anúncios. Você pode aceitar ou
               recusar. Saiba mais na <Link to="/privacidade">Política de Privacidade</Link>.
             </p>
             {globalPrivacyControl && (
-              <p>Seu navegador solicitou que o rastreamento permaneça desativado.</p>
+              <p className="privacy-banner-gpc">Seu navegador solicitou que o rastreamento permaneça desativado.</p>
             )}
           </div>
           <div className="privacy-banner-actions">

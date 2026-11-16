@@ -1,12 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product-card";
 import { fetchProductByHandle, fetchShopifyProducts, formatPrice, isContainFitProduct } from "@/lib/shopify";
 import { getProductDescription } from "@/lib/product-descriptions";
 import { filterGalleryByMetal } from "@/lib/product-filtering";
+import { customerPhotos } from "@/lib/customer-reviews";
+import { responsiveSrcSet } from "@/lib/home-images";
 import { useCartStore } from "@/stores/cart-store";
 import { toast } from "sonner";
 import { trackViewContent, trackAddToCart } from "@/lib/meta-pixel";
@@ -57,11 +59,26 @@ function ProductPage() {
   const { data: product } = useSuspenseQuery(productQuery(productId));
   const { data: catalog } = useSuspenseQuery(recommendationsQuery);
   const { addItem, isLoading } = useCartStore();
+  const addButtonRef = useRef<HTMLButtonElement>(null);
+  const [showMobileAdd, setShowMobileAdd] = useState(false);
 
   const variants = product?.variants.edges.map((e) => e.node) ?? [];
   const [variantId, setVariantId] = useState<string | undefined>(variants[0]?.id);
   const selectedVariant = variants.find((v) => v.id === variantId) ?? variants[0];
   const hasOptions = (product?.options ?? []).some((o) => o.name !== "Title" || o.values.length > 1);
+
+  useEffect(() => {
+    const button = addButtonRef.current;
+    if (!button || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry) setShowMobileAdd(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(button);
+    return () => observer.disconnect();
+  }, []);
 
   if (!product) return null;
 
@@ -83,7 +100,7 @@ function ProductPage() {
   const details: [string, string][] = [
     ["Descrição", `${displayDescription} Peça de alto padrão com acabamento polido.`],
     ["Materiais e cuidados", materialText],
-    ["Envio e trocas", "Envio segurado com código de rastreamento para todo o Brasil. Garantia incondicional de troca em até 7 dias após o recebimento."],
+    ["Envio e trocas", "Frete grátis para todo o Brasil com código de rastreamento. Entrega em 2 a 3 semanas. Troca ou devolução em até 7 dias após o recebimento."],
     ["Embalagem presente", "Todas as joias são entregues em embalagem especial Vesta, pronta para presentear com sofisticação e requinte."],
   ];
 
@@ -165,6 +182,9 @@ function ProductPage() {
               selectedVariant?.price.currencyCode ?? product.priceRange.minVariantPrice.currencyCode,
             )}
           </p>
+          <p className="pdp-delivery-note">
+            Frete grátis · Entrega em 2 a 3 semanas · Troca em 7 dias · Pix ou até 12x no cartão
+          </p>
           <p className="pdp-description">{displayDescription}</p>
           {hasOptions && variants.length > 1 && (
             <div className="sizes">
@@ -201,6 +221,7 @@ function ProductPage() {
             </div>
           )}
           <Button
+            ref={addButtonRef}
             className="vesta-button add-button"
             disabled={!selectedVariant?.availableForSale || isLoading}
             onClick={handleAdd}
@@ -212,8 +233,24 @@ function ProductPage() {
               <ProductAccordionItem key={title} title={title} content={content} />
             ))}
           </div>
+          <ProductCustomerReviews handle={product.handle} />
         </div>
       </section>
+      <div className={`mobile-add-bar ${showMobileAdd ? "visible" : ""}`}>
+        <strong>
+          {formatPrice(
+            selectedVariant?.price.amount ?? product.priceRange.minVariantPrice.amount,
+            selectedVariant?.price.currencyCode ?? product.priceRange.minVariantPrice.currencyCode,
+          )}
+        </strong>
+        <Button
+          className="vesta-button"
+          disabled={!selectedVariant?.availableForSale || isLoading}
+          onClick={handleAdd}
+        >
+          {isLoading ? <Loader2 className="animate-spin" /> : selectedVariant?.availableForSale ? "ADICIONAR À SACOLA" : "Esgotado"}
+        </Button>
+      </div>
       {recs.length > 0 && (
         <section className="recommendations">
           <div className="section-heading">
@@ -228,6 +265,45 @@ function ProductPage() {
         </section>
       )}
     </main>
+  );
+}
+
+function ProductCustomerReviews({ handle }: { handle: string }) {
+  const orderedPhotos = [...customerPhotos].sort(
+    (a, b) => Number(b.review?.handle === handle) - Number(a.review?.handle === handle),
+  );
+
+  return (
+    <section className="pdp-customer-reviews" aria-labelledby="pdp-clientes-titulo">
+      <h2 id="pdp-clientes-titulo">Nossas clientes</h2>
+      <div className="pdp-reviews-track">
+        {orderedPhotos.map((photo) => {
+          const review = photo.review;
+          if (!review) return null;
+          return (
+            <figure key={photo.image.desktop.url} className="pdp-review-card">
+              <img
+                src={photo.image.mobile.url}
+                srcSet={responsiveSrcSet(photo.image)}
+                sizes="64px"
+                alt={photo.alt}
+                loading="lazy"
+                decoding="async"
+                width={photo.image.width}
+                height={photo.image.height}
+              />
+              <figcaption>
+                <span className="pdp-review-stars" aria-label={`${review.rating} de 5 estrelas`}>
+                  {"★".repeat(review.rating)}
+                </span>
+                <blockquote>“{review.text}”</blockquote>
+                <strong>{review.name}</strong>
+              </figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 

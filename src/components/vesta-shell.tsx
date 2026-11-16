@@ -321,7 +321,7 @@ export function VestaShell() {
               </div>
               <div className="crystal-diff-item">
                 <span className="diff-symbol">✦</span>
-                <span>Edição Limitada · Envio Imediato</span>
+                <span>Edição Limitada · Frete grátis · Entrega em 2 a 3 semanas</span>
               </div>
             </div>
             <a href="#acesso" className="crystal-vip-button" onClick={closeMenu}>

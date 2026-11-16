@@ -26,3 +26,11 @@
 - [x] Corrigir o enquadramento vertical aprovado, revisar prévias e substituir nos dois anúncios pausados
 - [ ] Configurar e verificar a compra concluída na Shopify — aguardando configuração do usuário
 - [ ] Antes de ativar: foto da página Vesta, duração/end_time e nova aprovação explícita
+
+# Conversão do tráfego mobile
+
+- [x] Compactar o aviso de cookies e adaptar a hero para mobile
+- [x] Atualizar prazos de entrega e informações comerciais
+- [x] Adicionar compra fixa e avaliações reais na página do produto
+- [x] Publicar página de trocas e envios e corrigir contatos do rodapé
+- [x] Conferir o build e salvar as alterações
