@@ -276,6 +276,7 @@ function ProductCustomerReviews({ handle }: { handle: string }) {
   return (
     <section className="pdp-customer-reviews" aria-labelledby="pdp-clientes-titulo">
       <h2 id="pdp-clientes-titulo">Nossas clientes</h2>
+      <p className="pdp-reviews-hint">Arraste para o lado →</p>
       <div className="pdp-reviews-track">
         {orderedPhotos.map((photo) => {
           const review = photo.review;
